@@ -13,16 +13,16 @@
 
 <style>
     :root {
-        /* ปรับธีม: Grand Professional (Midnight Blue & Platinum) */
-        --primary: #020617; /* Slate-950 - เข้มขรึม */
-        --primary-light: #1e293b; /* Slate-800 */
-        --accent: #ca8a04; /* Bronze/Gold - เพิ่มความ Grand */
+        /* ธีม: Grand Professional (Optimized for Mobile) */
+        --primary: #0f172a; 
+        --primary-light: #1e293b; 
+        --accent: #ca8a04; 
         
-        --bg-body: #f1f5f9; /* พื้นหลังเทาอ่อนเกือบขาว ให้ความสว่าง */
+        --bg-body: #f8fafc;
         --bg-card: #ffffff;
         --text-main: #0f172a;
         --text-muted: #64748b;
-        --border-color: #cbd5e1;
+        --border-color: #e2e8f0;
     }
 
     body { 
@@ -32,49 +32,51 @@
         -webkit-tap-highlight-color: transparent; 
         overflow-x: hidden;
         letter-spacing: -0.01em;
-        background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-        background-size: 40px 40px; /* เพิ่ม Texture จุดเล็กๆ จางๆ ให้ดูมีรายละเอียด */
+        /* เอา Texture ออกเพื่อความลื่นไหล */
     }
 
     body.no-scroll { overflow: hidden; }
     
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-body); }
-    ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 10px; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     
     dialog {
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: opacity 0.2s ease, transform 0.2s ease;
         opacity: 0;
-        transform: scale(0.95) translateY(10px);
+        transform: scale(0.96);
         border: none;
         outline: none;
         background-color: var(--bg-card);
         color: var(--text-main);
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         border-radius: 0.75rem;
     }
-    dialog[open] { opacity: 1; transform: scale(1) translateY(0); }
-    dialog::backdrop { background: rgba(2, 6, 23, 0.7); backdrop-filter: blur(8px); }
+    dialog[open] { opacity: 1; transform: scale(1); }
+    dialog::backdrop { background: rgba(0, 0, 0, 0.6); }
     
     .glass-nav { 
-        background: rgba(255, 255, 255, 0.9); 
-        backdrop-filter: blur(20px); 
-        border-bottom: 1px solid rgba(255,255,255,0.3);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        background: rgba(255, 255, 255, 0.95); 
+        /* ลด blur เพื่อประสิทธิภาพ */
+        backdrop-filter: blur(8px); 
+        border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     }
 
     input, select, textarea {
         background-color: #ffffff !important;
         color: var(--text-main) !important;
         border: 1px solid #cbd5e1 !important;
-        transition: all 0.2s ease;
+        transition: border-color 0.2s ease;
         border-radius: 0.5rem !important;
-        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+        /* ลบ inner shadow ที่หนักเครื่อง */
+        box-shadow: none; 
+        -webkit-appearance: none;
     }
     input:focus, select:focus, textarea:focus {
         border-color: var(--primary) !important;
-        box-shadow: 0 0 0 2px rgba(2, 6, 23, 0.1);
         outline: none;
+        ring: 1px solid var(--primary);
     }
 
     .field-error { border-color: #ef4444 !important; background-color: #fef2f2 !important; }
@@ -83,28 +85,32 @@
     .job-card {
         background: #ffffff;
         border: 1px solid #e2e8f0;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-        transition: all 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
         position: relative;
         overflow: hidden;
+        /* ช่วยเรื่อง render performance */
+        content-visibility: auto; 
+        contain-intrinsic-size: 300px;
     }
-    /* Effect แถบทองคาดบน */
     .job-card::before {
         content: '';
         position: absolute;
         top: 0; left: 0; right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
-        transition: height 0.3s;
+        height: 3px;
+        background: var(--primary);
         z-index: 10;
     }
-    .job-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        border-color: var(--primary-light);
-    }
-    .job-card:hover::before {
-        background: var(--accent);
+    /* Hover effect เฉพาะอุปกรณ์ที่มีเมาส์ */
+    @media (hover: hover) {
+        .job-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: #cbd5e1;
+        }
+        .job-card:hover::before {
+            background: var(--accent);
+        }
     }
 
     .btn-primary {
@@ -112,34 +118,29 @@
         color: #fff;
         position: relative;
         overflow: hidden;
-        transition: all 0.3s;
+        transition: background-color 0.2s;
     }
-    .btn-primary::after {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(255,255,255,0.05);
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-    .btn-primary:hover {
+    .btn-primary:active {
         background: var(--primary-light);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-        transform: translateY(-1px);
+        transform: scale(0.98);
     }
-    .btn-primary:hover::after { opacity: 1; }
 
     .btn-animate:active { transform: scale(0.98); }
 
-    .slider-hidden { opacity: 0; pointer-events: none; transform: scale(1.1); }
-    .slider-visible { opacity: 1; pointer-events: auto; transform: scale(1); }
+    .slider-hidden { opacity: 0; pointer-events: none; visibility: hidden; }
+    .slider-visible { opacity: 1; pointer-events: auto; visibility: visible; }
     
-    /* Hero Gradient Text */
     .text-gradient {
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-image: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+    }
+
+    /* Mobile Optimization Classes */
+    .mobile-touch-target {
+        min-height: 44px;
+        min-width: 44px;
     }
 </style>
 </head>
@@ -147,14 +148,14 @@
 
 <!-- Navigation -->
 <nav class="glass-nav sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex justify-between items-center">
       <div class="flex items-center gap-3 cursor-pointer group" onclick="refreshApp()">
-        <div class="bg-slate-950 text-white p-3 rounded-lg shadow-xl transition-transform group-hover:scale-105 border border-slate-800">
-            <i class="fa-solid fa-city text-xl text-yellow-500"></i>
+        <div class="bg-slate-900 text-white p-2.5 rounded-lg shadow-md border border-slate-800">
+            <i class="fa-solid fa-helmet-safety text-lg text-yellow-500"></i>
         </div>
         <div class="hidden xs:block">
-            <span class="font-bold text-xl sm:text-2xl text-slate-900 tracking-tight block leading-none font-serif">BuildPro<span class="text-slate-500">Connect</span></span>
-            <span class="text-[10px] text-yellow-600 font-bold uppercase tracking-[0.25em] border-t border-slate-200 pt-0.5 mt-0.5 inline-block w-full text-justify">Construction Network</span>
+            <span class="font-bold text-lg sm:text-2xl text-slate-900 tracking-tight block leading-none font-serif">BuildPro<span class="text-slate-500">Connect</span></span>
+            <span class="text-[9px] sm:text-[10px] text-yellow-600 font-bold uppercase tracking-[0.15em] sm:tracking-[0.25em] border-t border-slate-200 pt-0.5 mt-0.5 inline-block w-full text-justify">Construction Network</span>
         </div>
       </div>
       
@@ -169,100 +170,90 @@
                  <i class="fa-solid fa-magnifying-glass absolute left-4 top-3 text-slate-400"></i>
              </div>
          </div>
-         <button onclick="openNewPostModal()" class="btn-primary px-8 py-3 rounded-lg flex items-center gap-2 btn-animate font-bold transition-all text-sm uppercase tracking-wider shadow-lg">
-            <i class="fa-solid fa-plus-circle text-yellow-500"></i> ลงประกาศรับงาน
+         <button onclick="openNewPostModal()" class="btn-primary px-6 py-3 rounded-lg flex items-center gap-2 btn-animate font-bold transition-all text-sm uppercase tracking-wider shadow-md hover:shadow-lg">
+            <i class="fa-solid fa-plus-circle text-yellow-500"></i> ลงประกาศ
          </button>
       </div>
       
       <!-- Mobile Actions -->
       <div class="lg:hidden flex items-center gap-2">
-         <button onclick="openNewPostModal()" class="btn-primary w-11 h-11 rounded-lg flex items-center justify-center shadow-md active:scale-90 transition-transform">
-            <i class="fa-solid fa-plus text-xl text-yellow-500"></i>
+         <button onclick="openNewPostModal()" class="btn-primary mobile-touch-target w-10 h-10 rounded-lg flex items-center justify-center shadow-md active:scale-95 transition-transform">
+            <i class="fa-solid fa-plus text-lg text-yellow-500"></i>
          </button>
       </div>
   </div>
 </nav>
 
 <!-- Mobile Filter Bar -->
-<div class="lg:hidden bg-white border-b border-slate-200 p-3 sticky top-20 z-40 shadow-md">
+<div class="lg:hidden bg-white border-b border-slate-200 p-2.5 sticky top-16 z-40 shadow-sm">
     <div class="flex gap-2 max-w-2xl mx-auto">
-        <select id="filter_province_mobile" class="border border-slate-300 rounded-lg px-2 py-2.5 text-xs bg-slate-50 outline-none w-[35%] font-medium text-slate-700 shadow-sm">
+        <select id="filter_province_mobile" class="border border-slate-300 rounded-lg px-2 py-2 text-xs bg-slate-50 outline-none w-[35%] font-medium text-slate-700 h-10">
             <option value="all">ทุกพื้นที่</option>
         </select>
         <div class="relative w-[65%]">
-            <input id="q_mobile" type="text" placeholder="ค้นหา..." class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-xs outline-none text-slate-800 placeholder-slate-400 shadow-sm font-medium">
+            <input id="q_mobile" type="text" placeholder="ค้นหา..." class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs outline-none text-slate-800 placeholder-slate-400 h-10 font-medium appearance-none">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
         </div>
     </div>
 </div>
 
-<header class="bg-slate-900 text-white relative overflow-hidden shadow-2xl">
-    <!-- Background Pattern -->
-    <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(30deg, #ffffff 12%, transparent 12.5%, transparent 87%, #ffffff 87.5%, #ffffff), linear-gradient(150deg, #ffffff 12%, transparent 12.5%, transparent 87%, #ffffff 87.5%, #ffffff), linear-gradient(30deg, #ffffff 12%, transparent 12.5%, transparent 87%, #ffffff 87.5%, #ffffff), linear-gradient(150deg, #ffffff 12%, transparent 12.5%, transparent 87%, #ffffff 87.5%, #ffffff), linear-gradient(60deg, #777777 25%, transparent 25.5%, transparent 75%, #777777 75%, #777777), linear-gradient(60deg, #777777 25%, transparent 25.5%, transparent 75%, #777777 75%, #777777); background-size: 80px 140px; background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;"></div>
-    <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-transparent"></div>
+<header class="bg-slate-900 text-white relative overflow-hidden shadow-md">
+    <!-- Simplified Background for Mobile Performance -->
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950"></div>
+    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 24px 24px;"></div>
     
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-        <div class="max-w-2xl">
-            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full mb-6">
-                <span class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(234,179,8,0.8)]"></span>
-                <span class="text-[10px] font-bold text-slate-200 uppercase tracking-widest"><span id="countTutors" class="text-white text-xs mr-1">0</span> Active Professionals</span>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
+        <div class="max-w-2xl w-full">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full mb-4 sm:mb-6">
+                <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                <span class="text-[10px] font-bold text-slate-200 uppercase tracking-widest"><span id="countTutors" class="text-white text-xs mr-1">0</span> Active Pros</span>
             </div>
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight mb-4 drop-shadow-lg">
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight mb-3 sm:mb-4">
                 ทำเนียบ<span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">ผู้รับเหมา</span><br>ระดับมืออาชีพ
             </h1>
-            <p class="text-slate-400 text-sm sm:text-lg font-light max-w-lg leading-relaxed border-l-2 border-yellow-600/50 pl-4">
-                เชื่อมโยงเจ้าของโครงการกับทีมช่างคุณภาพ มาตรฐานงานก่อสร้างที่คุณวางใจได้ ตรวจสอบผลงานจริงได้ทันที
+            <p class="text-slate-400 text-xs sm:text-lg font-light max-w-lg leading-relaxed border-l-2 border-yellow-600/50 pl-4">
+                เชื่อมโยงเจ้าของโครงการกับทีมช่างคุณภาพ มาตรฐานงานก่อสร้างที่คุณวางใจได้
             </p>
-        </div>
-        <div class="hidden md:block opacity-30 transform translate-x-10">
-            <i class="fa-solid fa-drafting-compass text-[12rem] text-slate-700"></i>
         </div>
     </div>
 </header>
 
-<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full -mt-8 relative z-20">
-    <div id="loading" class="flex flex-col items-center justify-center py-24 bg-white rounded-xl shadow-lg border border-slate-100">
-        <div class="w-16 h-16 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin mb-6"></div>
-        <p class="text-slate-400 text-xs font-bold tracking-[0.3em] uppercase">Synchronizing Database...</p>
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full -mt-4 sm:-mt-8 relative z-20">
+    <div id="loading" class="flex flex-col items-center justify-center py-24 bg-white rounded-xl shadow border border-slate-100">
+        <div class="w-12 h-12 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin mb-4"></div>
+        <p class="text-slate-400 text-xs font-bold tracking-[0.2em] uppercase">Loading...</p>
     </div>
     
     <!-- Grid -->
-    <section id="board" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 pb-12"></section>
+    <section id="board" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6 pb-12"></section>
 
     <!-- Pagination -->
-    <div id="pagination" class="flex justify-center items-center gap-4 pb-20">
-        <button onclick="changePage(-1)" id="btnPrev" class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-500 hover:bg-slate-900 hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-slate-500 transition-all shadow-sm active:scale-90"><i class="fa-solid fa-arrow-left"></i></button>
+    <div id="pagination" class="flex justify-center items-center gap-4 pb-16">
+        <button onclick="changePage(-1)" id="btnPrev" class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-500 active:bg-slate-100 disabled:opacity-30 transition-all shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
         <div class="px-6 py-2 bg-white rounded-full border border-slate-200 shadow-sm text-xs font-bold text-slate-500 tracking-widest uppercase">
-            Page <span id="pageIndicator" class="text-slate-900 mx-2 font-mono text-sm">1 / 1</span>
+            <span id="pageIndicator" class="text-slate-900 mx-1 font-mono text-sm">1 / 1</span>
         </div>
-        <button onclick="changePage(1)" id="btnNext" class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-500 hover:bg-slate-900 hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-slate-500 transition-all shadow-sm active:scale-90"><i class="fa-solid fa-arrow-right"></i></button>
+        <button onclick="changePage(1)" id="btnNext" class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-500 active:bg-slate-100 disabled:opacity-30 transition-all shadow-sm"><i class="fa-solid fa-arrow-right"></i></button>
     </div>
 </main>
 
-<footer class="bg-slate-950 text-slate-400 py-20 px-6 border-t border-slate-900 relative">
-    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-slate-900 via-yellow-600 to-slate-900 opacity-50"></div>
+<footer class="bg-slate-950 text-slate-400 py-12 px-6 border-t border-slate-900 relative">
     <div class="max-w-7xl mx-auto flex flex-col items-center">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-16 w-full max-w-5xl text-center md:text-left mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-16 w-full max-w-5xl text-center md:text-left mb-8">
             <div>
-                <div class="flex items-center gap-2 justify-center md:justify-start mb-6">
+                <div class="flex items-center gap-2 justify-center md:justify-start mb-4">
                     <i class="fa-solid fa-layer-group text-yellow-600"></i>
                     <h4 class="text-white font-bold text-sm uppercase tracking-widest">Platform Mission</h4>
                 </div>
-                <p class="text-xs leading-loose text-slate-500 font-light">BuildPro Connect มุ่งมั่นยกระดับมาตรฐานวงการก่อสร้างไทย สร้างพื้นที่กลางที่โปร่งใส ตรวจสอบได้ สำหรับการจ้างงานผู้รับเหมาและช่างฝีมือทุกระดับ</p>
+                <p class="text-xs leading-loose text-slate-500 font-light">BuildPro Connect พื้นที่กลางที่โปร่งใส สำหรับการจ้างงานผู้รับเหมาและช่างฝีมือ</p>
             </div>
             <div class="flex flex-col items-center">
-                <div class="w-16 h-16 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl flex items-center justify-center mb-5 border border-slate-800 shadow-inner transform rotate-3 hover:rotate-0 transition-transform duration-500">
-                    <i class="fa-solid fa-certificate text-yellow-500 text-2xl"></i>
-                </div>
+                <i class="fa-solid fa-certificate text-yellow-500 text-2xl mb-3"></i>
                 <h4 class="text-white font-bold text-sm uppercase tracking-widest">Verified Contractors</h4>
-                <p class="text-[10px] text-slate-600 mt-2 uppercase tracking-wide">Quality Assured</p>
+                <p class="text-[10px] text-slate-600 mt-1 uppercase tracking-wide">Quality Assured</p>
             </div>
             <div class="text-center md:text-right">
-                <div class="flex items-center gap-2 justify-center md:justify-end mb-6">
-                    <h4 class="text-white font-bold text-sm uppercase tracking-widest">Contact & Legal</h4>
-                    <i class="fa-solid fa-scale-balanced text-yellow-600"></i>
-                </div>
-                <p class="text-xs text-slate-500 leading-relaxed">© 2024 BuildPro Connect Group.<br>Bangkok, Thailand.<br>All rights reserved.</p>
+                <p class="text-xs text-slate-500 leading-relaxed mt-4">© 2024 BuildPro Connect Group.<br>All rights reserved.</p>
             </div>
         </div>
     </div>
@@ -270,69 +261,62 @@
 
 <!-- View Detail Dialog -->
 <dialog id="viewDlg" class="w-[95%] max-w-5xl m-auto overflow-hidden shadow-2xl bg-white p-0 rounded-xl">
-    <div class="grid grid-cols-1 md:grid-cols-12 h-full md:h-[700px]">
-        <!-- Image Section (Left/Top) -->
-        <div class="md:col-span-7 bg-slate-900 relative flex flex-col h-72 md:h-full border-b md:border-b-0 md:border-r border-slate-200">
+    <div class="grid grid-cols-1 md:grid-cols-12 h-full md:h-[700px] max-h-[90vh]">
+        <!-- Image Section -->
+        <div class="md:col-span-7 bg-slate-900 relative flex flex-col h-60 sm:h-72 md:h-full border-b md:border-b-0 md:border-r border-slate-200">
             <div id="detailImageHero" class="w-full h-full cursor-pointer overflow-hidden relative group">
-                <img id="viewHeroImg" src="" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onerror="handleImgError(this)">
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80"></div>
-                <div class="absolute top-4 left-4 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                     Portfolio Preview
+                <img id="viewHeroImg" src="" class="w-full h-full object-cover" loading="lazy" onerror="handleImgError(this)">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60"></div>
+                <div class="absolute top-4 left-4 bg-black/30 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                     Portfolio
                 </div>
             </div>
-            <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-slate-950 to-transparent pt-12">
+            <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-950 to-transparent">
                 <div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar" id="viewImages"></div>
             </div>
         </div>
         
-        <!-- Info Section (Right/Bottom) -->
-        <div class="md:col-span-5 p-8 flex flex-col bg-white h-full overflow-y-auto relative">
-            <div class="flex justify-between items-start mb-8">
-                <div class="px-4 py-1.5 bg-slate-900 text-white text-[10px] font-bold rounded shadow-lg uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-shield-halved text-yellow-400"></i> Professional
+        <!-- Info Section -->
+        <div class="md:col-span-5 p-6 sm:p-8 flex flex-col bg-white h-full overflow-y-auto relative">
+            <div class="flex justify-between items-start mb-6">
+                <div class="px-3 py-1 bg-slate-900 text-white text-[10px] font-bold rounded shadow-sm uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-yellow-400"></i> Pro
                 </div>
                 <div class="flex gap-2">
-                    <button id="btnDeletePost" class="text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors w-9 h-9 flex items-center justify-center rounded-lg border border-transparent hover:border-red-100"><i class="fa-solid fa-trash-can text-sm"></i></button>
-                    <button onclick="closeViewModal()" class="text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-colors w-9 h-9 flex items-center justify-center rounded-lg border border-transparent hover:border-slate-200"><i class="fa-solid fa-xmark text-xl"></i></button>
+                    <button id="btnDeletePost" class="text-slate-400 hover:text-red-600 transition-colors w-9 h-9 flex items-center justify-center rounded-lg border border-transparent hover:bg-slate-50"><i class="fa-solid fa-trash-can text-sm"></i></button>
+                    <button onclick="closeViewModal()" class="text-slate-400 hover:text-slate-900 transition-colors w-9 h-9 flex items-center justify-center rounded-lg border border-transparent hover:bg-slate-50"><i class="fa-solid fa-xmark text-xl"></i></button>
                 </div>
             </div>
 
-            <h2 id="viewTitle" class="text-3xl font-bold text-slate-900 mb-4 leading-tight font-serif tracking-tight"></h2>
+            <h2 id="viewTitle" class="text-xl sm:text-2xl font-bold text-slate-900 mb-3 leading-tight font-serif"></h2>
             
-            <div class="flex flex-wrap items-center gap-y-3 gap-x-6 mb-8 text-slate-500 text-xs font-medium border-b border-slate-100 pb-6">
-                <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-900">
-                        <i class="fa-solid fa-location-dot text-[10px]"></i>
-                    </div>
-                    <span id="viewProvince" class="tracking-wide"></span>
+            <div class="flex flex-wrap items-center gap-y-2 gap-x-4 mb-6 text-slate-500 text-xs font-medium border-b border-slate-100 pb-4">
+                <div class="flex items-center gap-1">
+                    <i class="fa-solid fa-location-dot text-[10px] text-slate-400"></i>
+                    <span id="viewProvince"></span>
                 </div>
-                <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-900">
-                        <i class="fa-solid fa-map-pin text-[10px]"></i>
-                    </div>
-                    <span id="viewAddress" class="tracking-wide"></span>
+                <div class="flex items-center gap-1">
+                    <i class="fa-solid fa-map-pin text-[10px] text-slate-400"></i>
+                    <span id="viewAddress"></span>
                 </div>
             </div>
 
-            <div class="bg-gradient-to-br from-slate-50 to-white rounded-xl p-6 border border-slate-200 mb-8 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-slate-100 rounded-full -mr-12 -mt-12 opacity-50"></div>
-                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-[0.2em] mb-2">Estimated Budget</p>
+            <div class="bg-slate-50 rounded-lg p-4 border border-slate-200 mb-6 relative overflow-hidden">
+                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-[0.1em] mb-1">Estimated Budget</p>
                 <div class="flex items-baseline gap-2 relative z-10">
-                    <span class="text-xl text-slate-400 font-serif italic">THB</span>
-                    <span id="viewPrice" class="text-4xl font-bold text-slate-900 tracking-tight"></span>
-                    <span class="text-yellow-600 text-[10px] uppercase font-bold ml-auto border border-yellow-200 bg-yellow-50 px-2 py-1 rounded">Starting Price</span>
+                    <span class="text-base text-slate-400 font-serif italic">THB</span>
+                    <span id="viewPrice" class="text-3xl font-bold text-slate-900 tracking-tight"></span>
                 </div>
             </div>
 
-            <div class="flex-grow overflow-y-auto pr-2 mb-6 custom-scrollbar">
-                <h4 class="text-[11px] font-bold text-slate-900 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <span class="w-1 h-4 bg-yellow-500 rounded-full"></span>
-                    Service Details
+            <div class="flex-grow overflow-y-auto pr-2 mb-4 custom-scrollbar">
+                <h4 class="text-[11px] font-bold text-slate-900 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <span class="w-1 h-3 bg-yellow-500 rounded-full"></span> Details
                 </h4>
-                <div id="viewBody" class="text-slate-600 text-sm leading-7 whitespace-pre-line font-light"></div>
+                <div id="viewBody" class="text-slate-600 text-sm leading-6 whitespace-pre-line font-light"></div>
             </div>
 
-            <div class="mt-auto pt-6 border-t border-slate-100 space-y-4 bg-white">
+            <div class="mt-auto pt-4 border-t border-slate-100 space-y-4 bg-white">
                 <div class="flex justify-between items-center text-xs">
                     <div class="flex items-center gap-2">
                         <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-700 font-bold border border-slate-200">
@@ -343,11 +327,9 @@
                             <span id="viewContact" class="text-slate-900 font-bold"></span>
                         </div>
                     </div>
-                    <span id="viewPublishDate" class="text-slate-400 text-[10px] font-mono bg-slate-50 px-2 py-1 rounded"></span>
                 </div>
-                <a id="btnCall" href="#" class="btn-primary w-full py-4 rounded-xl text-center font-bold text-white shadow-xl flex items-center justify-center gap-3 transition-all hover:-translate-y-1 group">
-                    <span class="bg-white/20 w-8 h-8 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-colors"><i class="fa-solid fa-phone"></i></span>
-                    ติดต่อผู้รับเหมา / สอบถามงาน
+                <a id="btnCall" href="#" class="btn-primary w-full py-3.5 rounded-lg text-center font-bold text-white shadow-lg flex items-center justify-center gap-2 transition-transform active:scale-95">
+                    <i class="fa-solid fa-phone"></i> ติดต่อสอบถาม
                 </a>
             </div>
         </div>
@@ -356,96 +338,81 @@
 
 <!-- Registration Dialog -->
 <dialog id="dlg" class="rounded-xl w-[95%] max-w-2xl m-auto overflow-hidden bg-white border border-slate-200 shadow-2xl p-0">
-    <div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-10">
-        <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center text-white shadow-lg">
-                <i class="fa-solid fa-pen-nib"></i>
+    <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-10">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white">
+                <i class="fa-solid fa-pen-nib text-sm"></i>
             </div>
             <div>
-                <h3 id="dlgTitle" class="text-lg font-bold text-slate-900 tracking-tight">ลงทะเบียนผู้รับเหมา</h3>
-                <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Create New Professional Profile</p>
+                <h3 id="dlgTitle" class="text-base font-bold text-slate-900">ลงทะเบียนผู้รับเหมา</h3>
             </div>
         </div>
-        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-900 transition-colors w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100"><i class="fa-solid fa-xmark text-xl"></i></button>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-900 w-8 h-8 flex items-center justify-center rounded-full active:bg-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
     </div>
     
-    <div class="p-8 space-y-8 overflow-y-auto max-h-[75vh] bg-slate-50/50">
-        <div class="grid grid-cols-1 gap-8">
-            <!-- Job Info -->
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                <h4 class="text-xs font-bold text-slate-900 uppercase tracking-widest mb-6 border-b border-slate-100 pb-2">Project Information</h4>
-                <div class="space-y-5">
+    <div class="p-6 space-y-6 overflow-y-auto max-h-[70vh] bg-slate-50">
+        <div class="grid grid-cols-1 gap-6">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <h4 class="text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-4">Project Information</h4>
+                <div class="space-y-4">
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-2 tracking-wider">หัวข้อประกาศ <span class="text-red-500">*</span></label>
-                        <input id="title" type="text" class="w-full px-4 py-3 text-sm focus:ring-2 focus:ring-slate-900/10 transition-shadow" placeholder="เช่น รับเหมาก่อสร้างบ้านครบวงจร, ช่างไฟฟ้านอกสถานที่">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">หัวข้อประกาศ <span class="text-red-500">*</span></label>
+                        <input id="title" type="text" class="w-full px-3 py-2.5 text-sm" placeholder="เช่น รับเหมาก่อสร้างครบวงจร">
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                          <div>
-                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-2 tracking-wider">พื้นที่รับงาน <span class="text-red-500">*</span></label>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">พื้นที่ <span class="text-red-500">*</span></label>
                             <div class="relative">
-                                <select id="input_province" class="w-full px-4 py-3 text-sm appearance-none cursor-pointer bg-slate-50 border-slate-200">
-                                    <option value="">-- เลือกจังหวัด --</option>
+                                <select id="input_province" class="w-full px-3 py-2.5 text-sm appearance-none bg-white border-slate-200">
+                                    <option value="">-- เลือก --</option>
                                 </select>
-                                <i class="fa-solid fa-chevron-down absolute right-4 top-4 text-xs text-slate-400 pointer-events-none"></i>
+                                <i class="fa-solid fa-chevron-down absolute right-3 top-3.5 text-xs text-slate-400 pointer-events-none"></i>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-2 tracking-wider">งบประมาณเริ่มต้น <span class="text-red-500">*</span></label>
-                            <div class="relative group">
-                                <input id="price" type="number" class="w-full pl-4 pr-12 py-3 text-sm bg-slate-50 border-slate-200" placeholder="0.00">
-                                <span class="absolute right-4 top-3 text-xs font-bold text-slate-400 group-focus-within:text-slate-900 transition-colors">THB</span>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">งบประมาณ <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <input id="price" type="number" class="w-full pl-3 pr-10 py-2.5 text-sm border-slate-200" placeholder="0">
+                                <span class="absolute right-3 top-2.5 text-xs text-slate-400">THB</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Contact Info -->
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                 <h4 class="text-xs font-bold text-slate-900 uppercase tracking-widest mb-6 border-b border-slate-100 pb-2">Contact Details</h4>
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                 <h4 class="text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-4">Contact</h4>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 tracking-wider">ชื่อผู้รับเหมา / บริษัท</label>
-                        <div class="relative">
-                             <i class="fa-solid fa-id-card absolute left-3 top-3.5 text-slate-400 text-xs"></i>
-                             <input id="contact_name" type="text" class="w-full pl-10 pr-4 py-3 text-sm" placeholder="ระบุชื่อ">
-                        </div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">ชื่อผู้ติดต่อ</label>
+                        <input id="contact_name" type="text" class="w-full px-3 py-2.5 text-sm" placeholder="ระบุชื่อ">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 tracking-wider">เบอร์โทรศัพท์ <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <i class="fa-solid fa-mobile-screen absolute left-3 top-3.5 text-slate-400 text-xs"></i>
-                            <input id="phone" type="tel" class="w-full pl-10 pr-4 py-3 text-sm" placeholder="08x-xxxxxxx">
-                        </div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">เบอร์โทร <span class="text-red-500">*</span></label>
+                        <input id="phone" type="tel" class="w-full px-3 py-2.5 text-sm" placeholder="08x-xxxxxxx">
                     </div>
                 </div>
-                <div class="mb-5">
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-2 tracking-wider">ที่ตั้งสำนักงาน / เขตพื้นที่</label>
-                    <input id="address" type="text" class="w-full px-4 py-3 text-sm bg-slate-50 border-slate-200" placeholder="เช่น เฉพาะเขตบางนา, รับงานทั่วภาคตะวันออก">
+                <div class="mb-4">
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">ที่ตั้ง / รายละเอียด</label>
+                    <input id="address" type="text" class="w-full px-3 py-2.5 text-sm border-slate-200" placeholder="พื้นที่ให้บริการ">
                 </div>
                  <div>
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-2 tracking-wider">รายละเอียดประสบการณ์</label>
-                    <textarea id="body" rows="4" class="w-full px-4 py-3 text-sm resize-none leading-relaxed bg-slate-50 border-slate-200" placeholder="อธิบายจุดเด่น เครื่องมือที่มี หรือแนวนโยบายการรับประกันงาน..."></textarea>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">ประสบการณ์</label>
+                    <textarea id="body" rows="3" class="w-full px-3 py-2.5 text-sm resize-none border-slate-200" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
                 </div>
             </div>
         
-            <!-- Image Upload -->
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                <div class="flex justify-between items-end mb-4">
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-900 uppercase tracking-widest">Portfolio Images</h4>
-                        <p class="text-[10px] text-slate-400 mt-1">รูปผลงานจริง หรือ หน้างาน (Max 3)</p>
-                    </div>
-                    <span id="imgCount" class="text-[10px] font-mono text-slate-600 bg-slate-100 px-3 py-1 rounded-full">0 / 3</span>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-center mb-3">
+                    <h4 class="text-[10px] font-bold text-slate-900 uppercase tracking-widest">Images (Max 3)</h4>
+                    <span id="imgCount" class="text-[9px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded">0/3</span>
                 </div>
-                <div class="grid grid-cols-3 sm:grid-cols-4 gap-4">
+                <div class="grid grid-cols-4 gap-2">
                     <div id="previewList" class="contents"></div>
-                    <label id="uploadBtn" class="aspect-square border-2 border-dashed border-slate-300 rounded-xl cursor-pointer bg-slate-50 hover:bg-white hover:border-slate-800 flex flex-col items-center justify-center text-slate-400 transition-all group">
-                        <div class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform shadow-sm">
-                            <i class="fa-solid fa-plus text-sm text-slate-600"></i>
-                        </div>
-                        <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 group-hover:text-slate-800">Add Photo</span>
+                    <label id="uploadBtn" class="aspect-square border border-dashed border-slate-300 rounded-lg cursor-pointer bg-slate-50 flex flex-col items-center justify-center text-slate-400 active:bg-slate-100">
+                        <i class="fa-solid fa-camera text-sm mb-1"></i>
+                        <span class="text-[8px] font-bold uppercase">Add</span>
                         <input id="img" type="file" class="hidden" accept="image/*" multiple onchange="appendImages(this)">
                     </label>
                 </div>
@@ -453,26 +420,26 @@
         </div>
     </div>
     
-    <div class="p-6 border-t border-slate-100 flex gap-4 bg-white sticky bottom-0 z-10 shadow-[0_-5px_20px_rgba(0,0,0,0.02)]">
-        <button onclick="closeModal()" class="px-6 py-3.5 text-slate-500 font-bold text-xs uppercase tracking-widest hover:text-slate-900 transition-colors hover:bg-slate-50 rounded-lg">Cancel</button>
-        <button onclick="savePost()" id="btnSave" class="btn-primary flex-1 py-3.5 rounded-lg font-bold text-xs uppercase tracking-widest shadow-xl btn-animate transition-all flex items-center justify-center gap-2">
-            <i class="fa-solid fa-paper-plane"></i> <span id="btnSaveText">Confirm & Publish</span> 
+    <div class="p-4 border-t border-slate-100 flex gap-3 bg-white sticky bottom-0 z-10">
+        <button onclick="closeModal()" class="px-4 py-3 text-slate-500 font-bold text-xs uppercase tracking-widest active:bg-slate-50 rounded-lg">Cancel</button>
+        <button onclick="savePost()" id="btnSave" class="btn-primary flex-1 py-3 rounded-lg font-bold text-xs uppercase tracking-widest shadow-md flex items-center justify-center gap-2">
+            <span id="btnSaveText">Confirm</span> 
         </button>
     </div>
 </dialog>
 
 <!-- Image Slider -->
-<div id="imageSlider" class="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-center slider-hidden transition-all duration-500">
-    <button onclick="closeImageSlider()" class="absolute top-8 right-8 text-white/50 hover:text-white w-12 h-12 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full z-[110] transition-colors border border-white/10">
-        <i class="fa-solid fa-xmark text-xl"></i>
+<div id="imageSlider" class="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center slider-hidden transition-opacity duration-300">
+    <button onclick="closeImageSlider()" class="absolute top-4 right-4 text-white/70 hover:text-white w-10 h-10 flex items-center justify-center bg-white/10 rounded-full z-[110]">
+        <i class="fa-solid fa-xmark text-lg"></i>
     </button>
-    <div class="relative w-full h-full flex items-center justify-center p-4 sm:p-12">
-        <button onclick="changeSlide(-1)" class="absolute left-6 sm:left-12 text-white w-14 h-14 hidden md:flex items-center justify-center hover:bg-white/10 rounded-full z-[110] transition-all border border-white/10 backdrop-blur-sm"><i class="fa-solid fa-chevron-left text-2xl"></i></button>
-        <img id="sliderMainImage" src="" class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl transition-all duration-500 border border-white/5">
-        <button onclick="changeSlide(1)" class="absolute right-6 sm:right-12 text-white w-14 h-14 hidden md:flex items-center justify-center hover:bg-white/10 rounded-full z-[110] transition-all border border-white/10 backdrop-blur-sm"><i class="fa-solid fa-chevron-right text-2xl"></i></button>
+    <div class="relative w-full h-full flex items-center justify-center p-2">
+        <button onclick="changeSlide(-1)" class="absolute left-2 text-white w-10 h-10 flex items-center justify-center bg-black/30 rounded-full z-[110]"><i class="fa-solid fa-chevron-left"></i></button>
+        <img id="sliderMainImage" src="" class="max-w-full max-h-[90vh] object-contain" decoding="async">
+        <button onclick="changeSlide(1)" class="absolute right-2 text-white w-10 h-10 flex items-center justify-center bg-black/30 rounded-full z-[110]"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
-    <div class="absolute bottom-12 flex flex-col items-center gap-4 z-[110]">
-        <span id="sliderCounter" class="text-white text-[11px] bg-white/10 px-6 py-2 rounded-full font-mono border border-white/10 tracking-widest uppercase backdrop-blur-md">Image 1 / 1</span>
+    <div class="absolute bottom-6 flex flex-col items-center gap-4 z-[110]">
+        <span id="sliderCounter" class="text-white text-[10px] bg-black/50 px-4 py-1 rounded-full font-mono uppercase">1 / 1</span>
     </div>
 </div>
 
@@ -522,8 +489,7 @@ const dom = {
 };
 
 function handleImgError(img) { 
-    // ใช้รูป Placeholder แนวช่าง/ก่อสร้าง
-    img.src = 'https://placehold.co/800x600/f1f5f9/94a3b8?text=Construction+Service&font=roboto'; 
+    img.src = 'https://placehold.co/600x400/f8fafc/cbd5e1?text=No+Image'; 
 }
 
 function setScrollLock(lock) { document.body.classList.toggle('no-scroll', lock); }
@@ -592,38 +558,36 @@ function renderBoard() {
     const items = filteredPosts.slice(start, start + ITEMS_PER_PAGE);
     
     if (items.length === 0) {
-        dom.board.innerHTML = `<div class="col-span-full py-24 text-center text-slate-400 italic text-sm tracking-widest border-2 border-dashed border-slate-200 rounded-2xl bg-white"><i class="fa-solid fa-helmet-safety text-4xl mb-4 opacity-20"></i><br>ไม่พบข้อมูลผู้รับเหมาตามเงื่อนไข</div>`;
+        dom.board.innerHTML = `<div class="col-span-full py-24 text-center text-slate-400 italic text-sm tracking-widest border border-dashed border-slate-300 rounded-2xl bg-white"><i class="fa-solid fa-helmet-safety text-4xl mb-4 opacity-20"></i><br>ไม่พบข้อมูล</div>`;
     } else {
         items.forEach(p => {
-            const thumb = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/400x500/f8fafc/94a3b8?text=BuildPro';
+            const thumb = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/400x300/f8fafc/cbd5e1?text=BuildPro';
             const card = document.createElement('div');
-            card.className = "job-card rounded-xl overflow-hidden cursor-pointer group";
+            card.className = "job-card rounded-lg overflow-hidden cursor-pointer group";
             card.onclick = () => viewDetail(p.id);
+            // Added loading="lazy" and decoding="async" for performance
             card.innerHTML = `
                 <div class="aspect-[4/3] bg-slate-100 overflow-hidden relative">
-                    <img src="${thumb}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/400x500/f8fafc/94a3b8?text=BuildPro'">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60"></div>
-                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-[9px] font-bold text-slate-700 uppercase tracking-wide shadow-sm flex items-center gap-1 border border-white/50">
+                    <img src="${thumb}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/400x300/f8fafc/cbd5e1?text=BuildPro'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/30 via-transparent to-transparent opacity-60"></div>
+                    <div class="absolute top-2 left-2 bg-white/95 backdrop-blur-sm px-1.5 py-0.5 rounded text-[8px] font-bold text-slate-700 uppercase tracking-wide shadow-sm flex items-center gap-1 border border-white/50">
                        <i class="fa-solid fa-location-dot text-yellow-500"></i> ${p.province}
                     </div>
                 </div>
-                <div class="p-5 flex flex-col flex-grow relative bg-white">
-                    <div class="mb-3">
-                        <h3 class="font-bold text-slate-800 text-sm leading-snug line-clamp-2 group-hover:text-slate-600 transition-colors h-10 font-serif tracking-tight">${p.title}</h3>
+                <div class="p-3 flex flex-col flex-grow relative bg-white">
+                    <div class="mb-2">
+                        <h3 class="font-bold text-slate-800 text-xs sm:text-sm leading-snug line-clamp-2 h-9">${p.title}</h3>
                     </div>
                     
-                    <div class="flex items-center gap-2 text-[10px] text-slate-400 mb-4 border-b border-slate-50 pb-3">
-                         <div class="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"><i class="fa-solid fa-user-gear"></i></div>
-                         <span class="font-medium">${p.contact_name || 'Professional'}</span>
+                    <div class="flex items-center gap-1.5 text-[9px] text-slate-400 mb-3 border-b border-slate-50 pb-2">
+                         <div class="w-4 h-4 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"><i class="fa-solid fa-user-gear"></i></div>
+                         <span class="font-medium truncate">${p.contact_name || 'Pro'}</span>
                     </div>
 
                     <div class="mt-auto flex items-center justify-between">
                         <div class="flex flex-col">
-                            <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Starting</span>
-                            <span class="text-slate-900 font-bold text-sm font-mono">฿${Number(p.price).toLocaleString()}</span>
-                        </div>
-                        <div class="w-8 h-8 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 group-hover:bg-slate-900 group-hover:text-white transition-all transform group-hover:-rotate-45">
-                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                            <span class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Start</span>
+                            <span class="text-slate-900 font-bold text-xs font-mono">฿${Number(p.price).toLocaleString()}</span>
                         </div>
                     </div>
                 </div>
@@ -641,32 +605,32 @@ function updatePagination() {
     dom.btnNext.disabled = currentPage === total;
 }
 
-function changePage(delta) { currentPage += delta; renderBoard(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+function changePage(delta) { currentPage += delta; renderBoard(); window.scrollTo({ top: 0, behavior: 'auto' }); }
 function openNewPostModal() { resetForm(); dom.dlg.showModal(); setScrollLock(true); }
 function closeModal() { dom.dlg.close(); setScrollLock(false); }
 
 function viewDetail(id) {
     const p = posts.find(x => x.id === id);
     if (!p) return;
-    dom.viewHero.src = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/800x600/f1f5f9/94a3b8?text=Job+Image';
+    dom.viewHero.src = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/600x400/f1f5f9/cbd5e1?text=No+Image';
     document.getElementById('viewTitle').textContent = p.title;
     document.getElementById('viewPrice').textContent = `${Number(p.price).toLocaleString()}`;
     document.getElementById('viewContact').textContent = p.contact_name || 'Professional Contractor';
     document.getElementById('viewProvince').textContent = p.province;
     document.getElementById('viewAddress').textContent = p.address || 'Flexible / On-Site';
-    document.getElementById('viewBody').textContent = p.body || 'No additional details provided.';
-    dom.viewDate.textContent = `REF: ${p.id}`;
+    document.getElementById('viewBody').textContent = p.body || '-';
+    // dom.viewDate.textContent = `REF: ${p.id}`;
     document.getElementById('btnCall').href = p.phone ? `tel:${p.phone}` : "#";
     
     const imgBox = document.getElementById('viewImages');
     imgBox.innerHTML = '';
     sliderImages = p.images || [];
-    if (sliderImages.length === 0) sliderImages = ['https://placehold.co/800x600/f1f5f9/94a3b8?text=No+Image'];
+    if (sliderImages.length === 0) sliderImages = ['https://placehold.co/600x400/f1f5f9/cbd5e1?text=No+Image'];
 
     sliderImages.forEach((url, i) => {
         const img = document.createElement('img');
         img.src = url;
-        img.className = `h-16 w-24 rounded-lg object-cover border-2 transition-all cursor-pointer flex-shrink-0 ${i===0?'border-white opacity-100 shadow-md':'border-white/20 opacity-60 hover:opacity-100 hover:border-white/50'}`;
+        img.className = `h-14 w-20 rounded-lg object-cover border-2 transition-all cursor-pointer flex-shrink-0 ${i===0?'border-white opacity-100 shadow-md':'border-white/20 opacity-60'}`;
         img.onclick = (e) => { e.stopPropagation(); openSlider(i); };
         imgBox.appendChild(img);
     });
@@ -681,13 +645,13 @@ function closeViewModal() { dom.viewDlg.close(); setScrollLock(false); }
 async function confirmDelete(id) {
     closeViewModal(); 
     const res = await Swal.fire({
-        title: 'Archive Profile?',
-        text: 'ข้อมูลจะถูกเก็บเข้าสู่ระบบจัดเก็บถาวร',
+        title: 'Archive?',
+        text: 'Confirm to archive this post.',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#0f172a',
         cancelButtonColor: '#94a3b8',
-        confirmButtonText: 'Confirm Archive',
+        confirmButtonText: 'Yes',
         background: '#ffffff',
         color: '#1e293b'
     });
@@ -695,8 +659,8 @@ async function confirmDelete(id) {
         Swal.fire({ title: 'Processing...', allowOutsideClick: false, background: '#ffffff', color: '#1e293b', didOpen: () => Swal.showLoading() });
         try {
             await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', id: id }) });
-            setTimeout(() => { loadPosts(); Swal.fire({ icon: 'success', title: 'Archived Successfully', background: '#ffffff', color: '#1e293b', showConfirmButton: false, timer: 1500 }); }, 1000);
-        } catch (e) { Swal.fire('Error', 'Operation failed.', 'error'); }
+            setTimeout(() => { loadPosts(); Swal.fire({ icon: 'success', title: 'Archived', background: '#ffffff', color: '#1e293b', showConfirmButton: false, timer: 1000 }); }, 1000);
+        } catch (e) { Swal.fire('Error', 'Failed', 'error'); }
     }
 }
 
@@ -713,12 +677,12 @@ function renderPreview() {
     dom.imgPreview.innerHTML = '';
     formImages.forEach((src, i) => {
         const div = document.createElement('div');
-        div.className = "relative aspect-square rounded-xl overflow-hidden border border-slate-200 shadow-sm group";
+        div.className = "relative aspect-square rounded-lg overflow-hidden border border-slate-200 shadow-sm group";
         div.innerHTML = `<img src="${src}" class="w-full h-full object-cover">
-            <button onclick="removeImg(${i})" class="absolute top-2 right-2 bg-white text-red-500 w-6 h-6 rounded-full flex items-center justify-center text-[10px] transition-transform shadow-md hover:scale-110"><i class="fa-solid fa-trash"></i></button>`;
+            <button onclick="removeImg(${i})" class="absolute top-1 right-1 bg-white text-red-500 w-5 h-5 rounded-full flex items-center justify-center text-[10px] shadow-sm"><i class="fa-solid fa-trash"></i></button>`;
         dom.imgPreview.appendChild(div);
     });
-    dom.imgCount.textContent = `${formImages.length} / 3`;
+    dom.imgCount.textContent = `${formImages.length}/3`;
     dom.uploadBtn.classList.toggle('hidden', formImages.length >= 3);
 }
 
@@ -733,13 +697,13 @@ async function savePost() {
     });
     
     if (!ok) {
-        Swal.fire({ icon: 'error', title: 'Incomplete Data', text: 'กรุณากรอกข้อมูลสำคัญให้ครบถ้วน', background: '#ffffff', color: '#1e293b' });
+        Swal.fire({ icon: 'error', title: 'Missing Data', text: 'Please fill required fields', background: '#ffffff', color: '#1e293b' });
         return;
     }
 
     const btn = document.getElementById('btnSave');
     btn.disabled = true;
-    dom.btnSaveText.textContent = "Publishing...";
+    dom.btnSaveText.textContent = "Sending...";
     
     const payload = {
         action: 'add', id: Date.now(), title: dom.title.value, price: Number(dom.price.value),
@@ -750,16 +714,16 @@ async function savePost() {
     try {
         await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
         closeModal();
-        Swal.fire({ title: 'Published', text: 'ข้อมูลของคุณเข้าสู่ระบบเรียบร้อยแล้ว', icon: 'success', background: '#ffffff', color: '#1e293b' });
+        Swal.fire({ title: 'Sent', text: 'Data submitted', icon: 'success', background: '#ffffff', color: '#1e293b', timer: 1500, showConfirmButton: false });
         setTimeout(() => loadPosts(), 1500);
-    } catch (e) { Swal.fire('Error', 'Submission failed.', 'error'); } 
-    finally { btn.disabled = false; dom.btnSaveText.textContent = "Confirm & Publish"; }
+    } catch (e) { Swal.fire('Error', 'Failed', 'error'); } 
+    finally { btn.disabled = false; dom.btnSaveText.textContent = "Confirm"; }
 }
 
 function openSlider(i) {
     sliderIndex = i;
     dom.sliderImg.src = sliderImages[i];
-    dom.sliderCount.textContent = `Image ${i + 1} / ${sliderImages.length}`;
+    dom.sliderCount.textContent = `${i + 1} / ${sliderImages.length}`;
     if (dom.viewDlg.open) dom.viewDlg.close();
     dom.slider.classList.replace('slider-hidden', 'slider-visible');
     setScrollLock(true);
@@ -770,7 +734,7 @@ function closeImageSlider() { dom.slider.classList.replace('slider-visible', 'sl
 function changeSlide(n) {
     sliderIndex = (sliderIndex + n + sliderImages.length) % sliderImages.length;
     dom.sliderImg.src = sliderImages[sliderIndex];
-    dom.sliderCount.textContent = `Image ${sliderIndex + 1} / ${sliderImages.length}`;
+    dom.sliderCount.textContent = `${sliderIndex + 1} / ${sliderImages.length}`;
 }
 
 function debounce(fn, t) {
