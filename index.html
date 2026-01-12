@@ -13,11 +13,10 @@
 
 <style>
     :root {
-        /* ธีม: Grand Professional (Optimized for Mobile) */
+        /* ธีม: Grand Professional (Optimized) */
         --primary: #0f172a; 
         --primary-light: #1e293b; 
         --accent: #ca8a04; 
-        
         --bg-body: #f8fafc;
         --bg-card: #ffffff;
         --text-main: #0f172a;
@@ -36,33 +35,30 @@
 
     body.no-scroll { overflow: hidden; }
     
-    /* Custom Scrollbar for Dialogs to look clean */
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar { width: 3px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     
     dialog {
-        transition: opacity 0.2s ease, transform 0.2s ease;
+        transition: opacity 0.15s ease, transform 0.15s ease;
         opacity: 0;
-        transform: scale(0.96);
+        transform: scale(0.98);
         border: none;
         outline: none;
         background-color: var(--bg-card);
         color: var(--text-main);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         border-radius: 0.75rem;
-        /* สำคัญ: กำหนด max-height เพื่อให้ scroll ทำงานได้ถูกต้อง */
         max-height: 90vh;
         max-width: 95vw;
         overscroll-behavior: contain;
     }
     dialog[open] { opacity: 1; transform: scale(1); }
-    dialog::backdrop { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(2px); }
+    dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
     
-    .glass-nav { 
-        background: rgba(255, 255, 255, 0.95); 
-        backdrop-filter: blur(8px); 
-        border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    .nav-solid { 
+        background: rgba(255, 255, 255, 0.98); 
+        border-bottom: 1px solid #e2e8f0;
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     }
 
@@ -70,9 +66,8 @@
         background-color: #ffffff !important;
         color: var(--text-main) !important;
         border: 1px solid #cbd5e1 !important;
-        transition: border-color 0.2s ease;
         border-radius: 0.5rem !important;
-        box-shadow: none; 
+        box-shadow: none !important; 
         -webkit-appearance: none;
     }
     input:focus, select:focus, textarea:focus {
@@ -81,14 +76,13 @@
         ring: 1px solid var(--primary);
     }
 
-    .field-error { border-color: #ef4444 !important; background-color: #fef2f2 !important; }
+    .field-error { border-color: #ef4444 !important; background-color: #fff1f2 !important; }
     .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     
     .job-card {
         background: #ffffff;
         border: 1px solid #e2e8f0;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
         position: relative;
         overflow: hidden;
         content-visibility: auto; 
@@ -102,234 +96,182 @@
         background: var(--primary);
         z-index: 10;
     }
-    @media (hover: hover) {
-        .job-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            border-color: #cbd5e1;
-        }
-        .job-card:hover::before {
-            background: var(--accent);
-        }
-    }
 
     .btn-primary {
         background: var(--primary);
         color: #fff;
-        position: relative;
-        overflow: hidden;
-        transition: background-color 0.2s;
+        border: 1px solid var(--primary);
     }
     .btn-primary:active {
         background: var(--primary-light);
-        transform: scale(0.98);
+        transform: translateY(1px);
     }
 
-    .btn-animate:active { transform: scale(0.98); }
-
-    .slider-hidden { opacity: 0; pointer-events: none; visibility: hidden; }
-    .slider-visible { opacity: 1; pointer-events: auto; visibility: visible; }
+    /* 3D Icons */
+    .icon-3d {
+        text-shadow: 1px 1px 0px rgba(0,0,0,0.2), 2px 2px 2px rgba(0,0,0,0.1);
+        filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+    }
     
-    .text-gradient {
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-image: linear-gradient(135deg, #0f172a 0%, #334155 100%);
-    }
+    .slider-hidden { display: none; }
+    .slider-visible { display: flex; animation: fadeIn 0.2s; }
+    
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    .mobile-touch-target {
-        min-height: 44px;
-        min-width: 44px;
-    }
+    .mobile-touch-target { min-height: 44px; min-width: 44px; }
 </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
 <!-- Navigation -->
-<nav class="glass-nav sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex justify-between items-center">
-      <div class="flex items-center gap-3 cursor-pointer group" onclick="refreshApp()">
-        <div class="bg-slate-900 text-white p-2.5 rounded-lg shadow-md border border-slate-800">
-            <i class="fa-solid fa-helmet-safety text-lg text-yellow-500"></i>
+<nav class="nav-solid sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+      <!-- Logo Area -->
+      <div class="flex items-center gap-3 cursor-pointer select-none" onclick="refreshApp()">
+        <div class="bg-slate-900 text-white w-10 h-10 rounded-lg flex items-center justify-center shadow-sm">
+            <i class="fa-solid fa-helmet-safety text-xl text-yellow-400 icon-3d"></i>
         </div>
-        <div class="hidden xs:block">
-            <span class="font-bold text-lg sm:text-2xl text-slate-900 tracking-tight block leading-none font-serif">BuildPro<span class="text-slate-500">Connect</span></span>
-            <span class="text-[9px] sm:text-[10px] text-yellow-600 font-bold uppercase tracking-[0.15em] sm:tracking-[0.25em] border-t border-slate-200 pt-0.5 mt-0.5 inline-block w-full text-justify">Construction Network</span>
+        <div>
+            <span class="font-bold text-lg text-slate-900 tracking-tight block leading-none font-serif">BuildPro</span>
+            <span class="text-[9px] text-yellow-600 font-bold uppercase tracking-widest">Connect</span>
         </div>
       </div>
       
-      <!-- Desktop Actions -->
-      <div class="hidden lg:flex items-center gap-4">
-         <div class="flex bg-white p-1 rounded-lg border border-slate-300 shadow-sm">
-             <select id="filter_province_desktop" class="bg-transparent px-4 py-2.5 text-sm outline-none cursor-pointer border-r border-slate-200 text-slate-700 font-medium hover:text-slate-900 transition-colors">
+      <!-- Right Side Actions -->
+      <div class="flex items-center gap-3">
+         <!-- Desktop Filter -->
+         <div class="hidden lg:flex bg-slate-100 p-1 rounded-lg border border-slate-200">
+             <!-- Fixed: Added missing select element here -->
+             <select id="filter_province_desktop" class="bg-transparent px-2 py-1.5 text-sm outline-none cursor-pointer border-r border-slate-200 text-slate-700 font-medium hover:text-slate-900 transition-colors mr-2">
                 <option value="all">พื้นที่ดำเนินการ (All)</option>
              </select>
              <div class="relative">
-                 <input id="q_desktop" type="text" placeholder="ค้นหาผู้รับเหมา..." class="bg-transparent pl-10 pr-4 py-2.5 text-sm w-80 outline-none text-slate-800 border-none focus:ring-0 placeholder-slate-400 font-medium">
-                 <i class="fa-solid fa-magnifying-glass absolute left-4 top-3 text-slate-400"></i>
+                 <input id="q_desktop" type="text" placeholder="ค้นหาช่าง..." class="bg-transparent pl-8 pr-4 py-1.5 text-sm w-48 outline-none text-slate-800 border-none focus:ring-0 placeholder-slate-400 font-medium">
+                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-2 text-slate-400 text-xs"></i>
              </div>
          </div>
-         <button onclick="openNewPostModal()" class="btn-primary px-6 py-3 rounded-lg flex items-center gap-2 btn-animate font-bold transition-all text-sm uppercase tracking-wider shadow-md hover:shadow-lg">
-            <i class="fa-solid fa-plus-circle text-yellow-500"></i> ลงประกาศ
-         </button>
-      </div>
-      
-      <!-- Mobile Actions -->
-      <div class="lg:hidden flex items-center gap-2">
-         <button onclick="openNewPostModal()" class="btn-primary mobile-touch-target w-10 h-10 rounded-lg flex items-center justify-center shadow-md active:scale-95 transition-transform">
-            <i class="fa-solid fa-plus text-lg text-yellow-500"></i>
+
+         <!-- Register Button -->
+         <button onclick="openNewPostModal()" class="bg-yellow-500 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-[0_3px_0_rgb(161,98,7)] active:shadow-none active:translate-y-[3px] transition-all flex items-center gap-2 border border-yellow-600">
+            <i class="fa-solid fa-plus text-xs drop-shadow-sm"></i> 
+            <span>ลงประกาศ</span>
          </button>
       </div>
   </div>
 </nav>
 
 <!-- Mobile Filter Bar -->
-<div class="lg:hidden bg-white border-b border-slate-200 p-2.5 sticky top-16 z-40 shadow-sm">
-    <div class="flex gap-2 max-w-2xl mx-auto">
-        <select id="filter_province_mobile" class="border border-slate-300 rounded-lg px-2 py-2 text-xs bg-slate-50 outline-none w-[35%] font-medium text-slate-700 h-10">
+<div class="lg:hidden bg-white border-b border-slate-200 px-4 py-3 sticky top-16 z-40 shadow-sm">
+    <div class="flex gap-2 w-full">
+        <select id="filter_province_mobile" class="border border-slate-300 rounded-lg px-2 py-0 text-xs bg-slate-50 outline-none w-[35%] font-medium text-slate-700 h-10">
             <option value="all">ทุกพื้นที่</option>
         </select>
         <div class="relative w-[65%]">
-            <input id="q_mobile" type="text" placeholder="ค้นหา..." class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs outline-none text-slate-800 placeholder-slate-400 h-10 font-medium appearance-none">
+            <input id="q_mobile" type="text" placeholder="ค้นหาช่าง, งานก่อสร้าง..." class="w-full pl-9 pr-3 py-0 bg-slate-50 border border-slate-300 rounded-lg text-xs outline-none text-slate-800 placeholder-slate-400 h-10 font-medium appearance-none">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
         </div>
     </div>
 </div>
 
-<header class="bg-slate-900 text-white relative overflow-hidden shadow-md">
-    <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950"></div>
-    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 24px 24px;"></div>
-    
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
-        <div class="max-w-2xl w-full">
-            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full mb-4 sm:mb-6">
-                <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+<header class="bg-slate-900 text-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-800 to-slate-950"></div>
+    <div class="max-w-7xl mx-auto px-4 py-8 relative z-10">
+        <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full mb-4 border border-white/5">
+                <div id="statusDot" class="w-2 h-2 bg-gray-400 rounded-full"></div>
                 <span class="text-[10px] font-bold text-slate-200 uppercase tracking-widest"><span id="countTutors" class="text-white text-xs mr-1">0</span> Active Pros</span>
             </div>
-            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight mb-3 sm:mb-4">
-                ทำเนียบ<span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">ผู้รับเหมา</span><br>ระดับมืออาชีพ
+            <h1 class="text-3xl font-bold text-white tracking-tight leading-tight mb-2">
+                ทำเนียบ<span class="text-yellow-400 icon-3d">ผู้รับเหมา</span>มืออาชีพ
             </h1>
-            <p class="text-slate-400 text-xs sm:text-lg font-light max-w-lg leading-relaxed border-l-2 border-yellow-600/50 pl-4">
-                เชื่อมโยงเจ้าของโครงการกับทีมช่างคุณภาพ มาตรฐานงานก่อสร้างที่คุณวางใจได้
+            <p class="text-slate-400 text-xs font-light max-w-md leading-relaxed">
+                เชื่อมโยงเจ้าของโครงการกับทีมช่างคุณภาพ มาตรฐานที่คุณวางใจได้
             </p>
         </div>
     </div>
 </header>
 
-<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full -mt-4 sm:-mt-8 relative z-20">
-    <div id="loading" class="flex flex-col items-center justify-center py-24 bg-white rounded-xl shadow border border-slate-100">
-        <div class="w-12 h-12 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin mb-4"></div>
-        <p class="text-slate-400 text-xs font-bold tracking-[0.2em] uppercase">Loading...</p>
+<main class="flex-grow max-w-7xl mx-auto px-4 py-6 w-full relative z-20">
+    <!-- Loader (Shows only if no cache) -->
+    <div id="loading" class="flex flex-col items-center justify-center py-12 bg-white rounded-xl border border-slate-100 shadow-sm hidden">
+        <div class="w-10 h-10 border-4 border-slate-200 border-t-yellow-500 rounded-full animate-spin mb-3"></div>
+        <p class="text-slate-400 text-[10px] font-bold tracking-widest uppercase">Connecting to Database...</p>
     </div>
     
     <!-- Grid -->
-    <section id="board" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6 pb-12"></section>
+    <section id="board" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 pb-8"></section>
 
     <!-- Pagination -->
-    <div id="pagination" class="flex justify-center items-center gap-4 pb-16">
-        <button onclick="changePage(-1)" id="btnPrev" class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-500 active:bg-slate-100 disabled:opacity-30 transition-all shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
-        <div class="px-6 py-2 bg-white rounded-full border border-slate-200 shadow-sm text-xs font-bold text-slate-500 tracking-widest uppercase">
-            <span id="pageIndicator" class="text-slate-900 mx-1 font-mono text-sm">1 / 1</span>
-        </div>
-        <button onclick="changePage(1)" id="btnNext" class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-500 active:bg-slate-100 disabled:opacity-30 transition-all shadow-sm"><i class="fa-solid fa-arrow-right"></i></button>
+    <div id="pagination" class="flex justify-center items-center gap-4 pb-12">
+        <button onclick="changePage(-1)" id="btnPrev" class="w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 active:bg-slate-100 disabled:opacity-30 shadow-sm"><i class="fa-solid fa-chevron-left"></i></button>
+        <span id="pageIndicator" class="text-xs font-bold text-slate-500 font-mono">1 / 1</span>
+        <button onclick="changePage(1)" id="btnNext" class="w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 active:bg-slate-100 disabled:opacity-30 shadow-sm"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
 </main>
 
-<footer class="bg-slate-950 text-slate-400 py-12 px-6 border-t border-slate-900 relative">
-    <div class="max-w-7xl mx-auto flex flex-col items-center">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-16 w-full max-w-5xl text-center md:text-left mb-8">
-            <div>
-                <div class="flex items-center gap-2 justify-center md:justify-start mb-4">
-                    <i class="fa-solid fa-layer-group text-yellow-600"></i>
-                    <h4 class="text-white font-bold text-sm uppercase tracking-widest">Platform Mission</h4>
-                </div>
-                <p class="text-xs leading-loose text-slate-500 font-light">BuildPro Connect พื้นที่กลางที่โปร่งใส สำหรับการจ้างงานผู้รับเหมาและช่างฝีมือ</p>
-            </div>
-            <div class="flex flex-col items-center">
-                <i class="fa-solid fa-certificate text-yellow-500 text-2xl mb-3"></i>
-                <h4 class="text-white font-bold text-sm uppercase tracking-widest">Verified Contractors</h4>
-                <p class="text-[10px] text-slate-600 mt-1 uppercase tracking-wide">Quality Assured</p>
-            </div>
-            <div class="text-center md:text-right">
-                <p class="text-xs text-slate-500 leading-relaxed mt-4">© 2024 BuildPro Connect Group.<br>All rights reserved.</p>
-            </div>
-        </div>
-    </div>
+<footer class="bg-slate-950 text-slate-500 py-8 px-4 border-t border-slate-900 text-center">
+    <i class="fa-solid fa-certificate text-yellow-600 text-2xl mb-2 icon-3d"></i>
+    <p class="text-[10px] uppercase tracking-widest text-slate-600 mb-4">Verified Standard</p>
+    <p class="text-[10px]">© 2024 BuildPro Connect.</p>
 </footer>
 
 <!-- View Detail Dialog -->
-<dialog id="viewDlg" class="w-[95%] max-w-5xl m-auto overflow-hidden shadow-2xl bg-white p-0 rounded-xl">
-    <!-- Structure: Flex col for mobile scroll support -->
-    <div class="flex flex-col md:grid md:grid-cols-12 h-full md:h-[700px] max-h-[85vh] md:max-h-[90vh]">
-        
-        <!-- Image Section (Fixed height on mobile, full height on desktop) -->
-        <div class="flex-none h-56 sm:h-72 md:h-full md:col-span-7 bg-slate-900 relative border-b md:border-b-0 md:border-r border-slate-200">
-            <div id="detailImageHero" class="w-full h-full cursor-pointer overflow-hidden relative group">
+<dialog id="viewDlg" class="w-full max-w-4xl p-0 rounded-xl overflow-hidden bg-white shadow-2xl">
+    <div class="flex flex-col md:grid md:grid-cols-12 h-[80vh] md:h-[600px]">
+        <!-- Image Section -->
+        <div class="flex-none h-60 md:h-full md:col-span-7 bg-slate-900 relative">
+            <div id="detailImageHero" class="w-full h-full relative">
                 <img id="viewHeroImg" src="" class="w-full h-full object-cover" loading="lazy" onerror="handleImgError(this)">
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60"></div>
-                <div class="absolute top-4 left-4 bg-black/30 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                     Portfolio
-                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-50"></div>
             </div>
-            <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-950 to-transparent">
-                <div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar" id="viewImages"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-slate-900 to-transparent">
+                <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar" id="viewImages"></div>
             </div>
+            <button onclick="closeViewModal()" class="absolute top-3 right-3 bg-black/30 text-white w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm md:hidden"><i class="fa-solid fa-xmark"></i></button>
         </div>
         
-        <!-- Info Section (Scrollable content) -->
-        <div class="flex-grow md:col-span-5 p-6 sm:p-8 flex flex-col bg-white overflow-y-auto relative">
-            <div class="flex justify-between items-start mb-4">
-                <div class="px-3 py-1 bg-slate-900 text-white text-[10px] font-bold rounded shadow-sm uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-shield-halved text-yellow-400"></i> Pro
-                </div>
-                <div class="flex gap-2">
-                    <button id="btnDeletePost" class="text-slate-400 hover:text-red-600 transition-colors w-9 h-9 flex items-center justify-center rounded-lg border border-transparent hover:bg-slate-50"><i class="fa-solid fa-trash-can text-sm"></i></button>
-                    <button onclick="closeViewModal()" class="text-slate-400 hover:text-slate-900 transition-colors w-9 h-9 flex items-center justify-center rounded-lg border border-transparent hover:bg-slate-50"><i class="fa-solid fa-xmark text-xl"></i></button>
-                </div>
-            </div>
-
-            <h2 id="viewTitle" class="text-xl sm:text-2xl font-bold text-slate-900 mb-3 leading-tight font-serif"></h2>
-            
-            <div class="flex flex-wrap items-center gap-y-2 gap-x-4 mb-6 text-slate-500 text-xs font-medium border-b border-slate-100 pb-4">
-                <div class="flex items-center gap-1">
-                    <i class="fa-solid fa-location-dot text-[10px] text-slate-400"></i>
-                    <span id="viewProvince"></span>
-                </div>
-                <div class="flex items-center gap-1">
-                    <i class="fa-solid fa-map-pin text-[10px] text-slate-400"></i>
-                    <span id="viewAddress"></span>
-                </div>
-            </div>
-
-            <div class="bg-slate-50 rounded-lg p-4 border border-slate-200 mb-6 relative overflow-hidden flex-none">
-                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-[0.1em] mb-1">Estimated Budget</p>
-                <div class="flex items-baseline gap-2 relative z-10">
-                    <span class="text-base text-slate-400 font-serif italic">THB</span>
-                    <span id="viewPrice" class="text-3xl font-bold text-slate-900 tracking-tight"></span>
-                </div>
-            </div>
-
-            <div class="flex-grow overflow-y-auto pr-2 mb-4 custom-scrollbar">
-                <h4 class="text-[11px] font-bold text-slate-900 uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <span class="w-1 h-3 bg-yellow-500 rounded-full"></span> Details
-                </h4>
-                <div id="viewBody" class="text-slate-600 text-sm leading-6 whitespace-pre-line font-light pb-4"></div>
-            </div>
-
-            <div class="mt-auto pt-4 border-t border-slate-100 space-y-4 bg-white flex-none sticky bottom-0">
-                <div class="flex justify-between items-center text-xs">
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-700 font-bold border border-slate-200">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="text-[9px] text-slate-400 uppercase tracking-wider">Contractor</span>
-                            <span id="viewContact" class="text-slate-900 font-bold"></span>
-                        </div>
+        <!-- Info Section -->
+        <div class="flex-grow md:col-span-5 flex flex-col bg-white overflow-hidden">
+            <div class="p-5 overflow-y-auto flex-grow">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="px-2 py-1 bg-slate-100 text-slate-800 text-[10px] font-bold rounded border border-slate-200 uppercase tracking-wide">
+                        <i class="fa-solid fa-check-circle text-green-500 mr-1"></i> Pro
+                    </div>
+                    <div class="flex gap-2 hidden md:flex">
+                        <button id="btnDeletePost" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-trash-can"></i></button>
+                        <button onclick="closeViewModal()" class="text-slate-400 hover:text-slate-900"><i class="fa-solid fa-xmark text-lg"></i></button>
                     </div>
                 </div>
-                <a id="btnCall" href="#" class="btn-primary w-full py-3.5 rounded-lg text-center font-bold text-white shadow-lg flex items-center justify-center gap-2 transition-transform active:scale-95">
-                    <i class="fa-solid fa-phone"></i> ติดต่อสอบถาม
+
+                <h2 id="viewTitle" class="text-lg font-bold text-slate-900 mb-2 leading-tight"></h2>
+                
+                <div class="flex items-center gap-3 mb-4 text-xs text-slate-500 border-b border-slate-100 pb-3">
+                    <span id="viewProvince" class="flex items-center gap-1"><i class="fa-solid fa-location-dot text-yellow-500"></i> <span class="truncate"></span></span>
+                    <span id="viewAddress" class="flex items-center gap-1 truncate"><i class="fa-solid fa-map-pin"></i> <span></span></span>
+                </div>
+
+                <div class="bg-slate-50 rounded-lg p-3 border border-slate-100 mb-4">
+                    <p class="text-[9px] text-slate-400 uppercase font-bold tracking-wider mb-1">งบประมาณเริ่มต้น</p>
+                    <div class="flex items-baseline gap-1">
+                        <span id="viewPrice" class="text-2xl font-bold text-slate-900 font-mono"></span>
+                        <span class="text-xs text-slate-500">THB</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h4 class="text-[10px] font-bold text-slate-900 uppercase mb-2">รายละเอียด</h4>
+                    <div id="viewBody" class="text-xs text-slate-600 leading-relaxed whitespace-pre-line"></div>
+                </div>
+            </div>
+
+            <!-- Footer Action -->
+            <div class="p-4 border-t border-slate-100 bg-white flex-none sticky bottom-0">
+                <div class="flex justify-between items-center text-xs mb-3">
+                    <span class="text-slate-400">ผู้รับเหมา:</span>
+                    <span id="viewContact" class="font-bold text-slate-800"></span>
+                </div>
+                <a id="btnCall" href="#" class="w-full bg-slate-900 text-white py-3 rounded-lg font-bold text-sm shadow-md active:scale-95 transition-transform flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-phone text-yellow-400 icon-3d"></i> ติดต่อสอบถาม
                 </a>
             </div>
         </div>
@@ -337,132 +279,100 @@
 </dialog>
 
 <!-- Registration Dialog -->
-<dialog id="dlg" class="rounded-xl w-[95%] max-w-2xl m-auto overflow-hidden bg-white border border-slate-200 shadow-2xl p-0 h-[85vh] sm:h-auto sm:max-h-[85vh]">
-    <!-- Structure: Flex column to ensure footer sticks and body scrolls -->
+<dialog id="dlg" class="w-full max-w-lg p-0 rounded-xl overflow-hidden bg-white shadow-2xl h-[90vh] sm:h-auto">
     <div class="flex flex-col h-full">
+        <!-- Header -->
+        <div class="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-white flex-none">
+            <h3 id="dlgTitle" class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-pen-nib text-yellow-500 icon-3d"></i> ลงทะเบียน
+            </h3>
+            <button onclick="closeModal()" class="text-slate-400 hover:text-slate-900 w-8 h-8 rounded-full active:bg-slate-50"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
         
-        <!-- Fixed Header -->
-        <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-white flex-none z-10">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white">
-                    <i class="fa-solid fa-pen-nib text-sm"></i>
-                </div>
+        <!-- Scrollable Form -->
+        <div class="p-5 overflow-y-auto flex-grow bg-slate-50 space-y-5">
+            <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm space-y-3">
+                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ข้อมูลงาน</h4>
                 <div>
-                    <h3 id="dlgTitle" class="text-base font-bold text-slate-900">ลงทะเบียนผู้รับเหมา</h3>
+                    <input id="title" type="text" class="w-full px-3 py-2 text-sm border-slate-200 focus:border-slate-900" placeholder="หัวข้อประกาศ *">
                 </div>
-            </div>
-            <button onclick="closeModal()" class="text-slate-400 hover:text-slate-900 w-8 h-8 flex items-center justify-center rounded-full active:bg-slate-100"><i class="fa-solid fa-xmark text-lg"></i></button>
-        </div>
-        
-        <!-- Scrollable Content -->
-        <div class="p-6 space-y-6 overflow-y-auto flex-grow bg-slate-50">
-            <div class="grid grid-cols-1 gap-6">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                    <h4 class="text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-4">Project Information</h4>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">หัวข้อประกาศ <span class="text-red-500">*</span></label>
-                            <input id="title" type="text" class="w-full px-3 py-2.5 text-sm" placeholder="เช่น รับเหมาก่อสร้างครบวงจร">
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                             <div>
-                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">พื้นที่ <span class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <select id="input_province" class="w-full px-3 py-2.5 text-sm appearance-none bg-white border-slate-200">
-                                        <option value="">-- เลือก --</option>
-                                    </select>
-                                    <i class="fa-solid fa-chevron-down absolute right-3 top-3.5 text-xs text-slate-400 pointer-events-none"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">งบประมาณ <span class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <input id="price" type="number" class="w-full pl-3 pr-10 py-2.5 text-sm border-slate-200" placeholder="0">
-                                    <span class="absolute right-3 top-2.5 text-xs text-slate-400">THB</span>
-                                </div>
-                            </div>
-                        </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="relative">
+                        <select id="input_province" class="w-full px-3 py-2 text-sm border-slate-200 bg-white"><option value="">จังหวัด *</option></select>
+                        <i class="fa-solid fa-chevron-down absolute right-3 top-3 text-xs text-slate-300 pointer-events-none"></i>
+                    </div>
+                    <div class="relative">
+                        <input id="price" type="number" class="w-full pl-3 pr-8 py-2 text-sm border-slate-200" placeholder="ราคา *">
+                        <span class="absolute right-3 top-2 text-xs text-slate-400">฿</span>
                     </div>
                 </div>
+            </div>
 
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                     <h4 class="text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-4">Contact</h4>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">ชื่อผู้ติดต่อ</label>
-                            <input id="contact_name" type="text" class="w-full px-3 py-2.5 text-sm" placeholder="ระบุชื่อ">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">เบอร์โทร <span class="text-red-500">*</span></label>
-                            <input id="phone" type="tel" class="w-full px-3 py-2.5 text-sm" placeholder="08x-xxxxxxx">
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">ที่ตั้ง / รายละเอียด</label>
-                        <input id="address" type="text" class="w-full px-3 py-2.5 text-sm border-slate-200" placeholder="พื้นที่ให้บริการ">
-                    </div>
-                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">ประสบการณ์</label>
-                        <textarea id="body" rows="3" class="w-full px-3 py-2.5 text-sm resize-none border-slate-200" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
-                    </div>
+            <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm space-y-3">
+                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ข้อมูลติดต่อ</h4>
+                <div class="grid grid-cols-2 gap-3">
+                    <input id="contact_name" type="text" class="w-full px-3 py-2 text-sm border-slate-200" placeholder="ชื่อผู้ติดต่อ">
+                    <input id="phone" type="tel" class="w-full px-3 py-2 text-sm border-slate-200" placeholder="เบอร์โทร *">
                 </div>
-            
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                    <div class="flex justify-between items-center mb-3">
-                        <h4 class="text-[10px] font-bold text-slate-900 uppercase tracking-widest">Images (Max 3)</h4>
-                        <span id="imgCount" class="text-[9px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded">0/3</span>
-                    </div>
-                    <div class="grid grid-cols-4 gap-2">
-                        <div id="previewList" class="contents"></div>
-                        <label id="uploadBtn" class="aspect-square border border-dashed border-slate-300 rounded-lg cursor-pointer bg-slate-50 flex flex-col items-center justify-center text-slate-400 active:bg-slate-100">
-                            <i class="fa-solid fa-camera text-sm mb-1"></i>
-                            <span class="text-[8px] font-bold uppercase">Add</span>
-                            <input id="img" type="file" class="hidden" accept="image/*" multiple onchange="appendImages(this)">
-                        </label>
-                    </div>
+                <input id="address" type="text" class="w-full px-3 py-2 text-sm border-slate-200" placeholder="เขตพื้นที่ / ที่อยู่">
+                <textarea id="body" rows="3" class="w-full px-3 py-2 text-sm border-slate-200 resize-none" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
+            </div>
+        
+            <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">รูปภาพ (สูงสุด 3)</h4>
+                    <span id="imgCount" class="text-[9px] text-slate-400">0/3</span>
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                    <div id="previewList" class="contents"></div>
+                    <label id="uploadBtn" class="aspect-square border border-dashed border-slate-300 rounded bg-slate-50 flex flex-col items-center justify-center text-slate-400 active:bg-slate-100">
+                        <i class="fa-solid fa-camera text-sm"></i>
+                        <input id="img" type="file" class="hidden" accept="image/*" multiple onchange="appendImages(this)">
+                    </label>
                 </div>
             </div>
         </div>
         
-        <!-- Fixed Footer -->
-        <div class="p-4 border-t border-slate-100 flex gap-3 bg-white flex-none z-10">
-            <button onclick="closeModal()" class="px-4 py-3 text-slate-500 font-bold text-xs uppercase tracking-widest active:bg-slate-50 rounded-lg">Cancel</button>
-            <button onclick="savePost()" id="btnSave" class="btn-primary flex-1 py-3 rounded-lg font-bold text-xs uppercase tracking-widest shadow-md flex items-center justify-center gap-2">
-                <span id="btnSaveText">Confirm</span> 
+        <!-- Footer -->
+        <div class="p-4 border-t border-slate-100 bg-white flex-none flex gap-3">
+            <button onclick="closeModal()" class="px-4 py-2 text-slate-500 font-bold text-xs rounded-lg border border-slate-200">ยกเลิก</button>
+            <button onclick="savePost()" id="btnSave" class="flex-1 bg-yellow-500 text-white py-2 rounded-lg font-bold text-sm shadow-[0_3px_0_rgb(161,98,7)] active:shadow-none active:translate-y-[3px] transition-all">
+                <span id="btnSaveText">ยืนยันลงประกาศ</span> 
             </button>
         </div>
     </div>
 </dialog>
 
 <!-- Image Slider -->
-<div id="imageSlider" class="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center slider-hidden transition-opacity duration-300">
-    <button onclick="closeImageSlider()" class="absolute top-4 right-4 text-white/70 hover:text-white w-10 h-10 flex items-center justify-center bg-white/10 rounded-full z-[110]">
-        <i class="fa-solid fa-xmark text-lg"></i>
-    </button>
-    <div class="relative w-full h-full flex items-center justify-center p-2">
-        <button onclick="changeSlide(-1)" class="absolute left-2 text-white w-10 h-10 flex items-center justify-center bg-black/30 rounded-full z-[110]"><i class="fa-solid fa-chevron-left"></i></button>
-        <img id="sliderMainImage" src="" class="max-w-full max-h-[90vh] object-contain" decoding="async">
-        <button onclick="changeSlide(1)" class="absolute right-2 text-white w-10 h-10 flex items-center justify-center bg-black/30 rounded-full z-[110]"><i class="fa-solid fa-chevron-right"></i></button>
+<div id="imageSlider" class="fixed inset-0 z-[100] bg-black hidden flex-col items-center justify-center">
+    <button onclick="closeImageSlider()" class="absolute top-4 right-4 text-white w-10 h-10 bg-white/20 rounded-full"><i class="fa-solid fa-xmark"></i></button>
+    <div class="w-full h-full flex items-center justify-center p-2">
+        <button onclick="changeSlide(-1)" class="absolute left-2 text-white w-10 h-10 bg-black/50 rounded-full"><i class="fa-solid fa-chevron-left"></i></button>
+        <img id="sliderMainImage" src="" class="max-w-full max-h-[90vh] object-contain">
+        <button onclick="changeSlide(1)" class="absolute right-2 text-white w-10 h-10 bg-black/50 rounded-full"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
-    <div class="absolute bottom-6 flex flex-col items-center gap-4 z-[110]">
-        <span id="sliderCounter" class="text-white text-[10px] bg-black/50 px-4 py-1 rounded-full font-mono uppercase">1 / 1</span>
-    </div>
+    <div class="absolute bottom-6 text-white text-xs bg-black/50 px-3 py-1 rounded-full"><span id="sliderCounter"></span></div>
 </div>
 
 <script>
-/* SYSTEM INTEGRATION */
 const API_URL = "https://script.google.com/macros/s/AKfycbwYvY-XHZDxETr9Oi79xymX3yYUCO273K_3z2MQucWh4vpMbcJ5AiyiHPCeAmYr4XsP/exec"; 
-
 const PROVINCES = ["กรุงเทพมหานคร", "กระบี่", "กาญจนบุรี", "กาฬสินธุ์", "กำแพงเพชร", "ขอนแก่น", "จันทบุรี", "ฉะเชิงเทรา", "ชลบุรี", "ชัยนาท", "ชัยภูมิ", "ชุมพร", "เชียงราย", "เชียงใหม่", "ตรัง", "ตราด", "ตาก", "นครนายก", "นครปฐม", "นครพนม", "นครราชสีมา", "นครศรีธรรมราช", "นครสวรรค์", "นนทบุรี", "นราธิวาส", "น่าน", "บึงกาฬ", "บุรีรัมย์", "ปทุมธานี", "ประจวบคีรีขันธ์", "ปราจีนบุรี", "ปัตตานี", "พระนครศรีอยุธยา", "พะเยา", "พังงา", "พัทลุง", "พิจิตร", "พิษณุโลก", "เพชรบุรี", "เพชรบูรณ์", "แพร่", "ภูเก็ต", "มหาสารคาม", "มุกดาหาร", "แม่ฮ่องสอน", "ยโสธร", "ยะลา", "ร้อยเอ็ด", "ระนอง", "ระยอง", "ราชบุรี", "ลพบุรี", "ลำปาง", "ลำพูน", "เลย", "ศรีสะเกษ", "สกลนคร", "สงขลา", "สตูล", "สมุทรปราการ", "สมุทรสงคราม", "สมุทรสาคร", "สระแก้ว", "สระบุรี", "สิงห์บุรี", "สุโขทัย", "สุพรรณบุรี", "สุราษฎร์ธานี", "สุรินทร์", "หนองคาย", "หนองบัวลำภู", "อ่างทอง", "อำนาจเจริญ", "อุดรธานี", "อุตรดิตถ์", "อุทัยธานี", "อุบลราชธานี"].sort();
 
-let posts = [];
-let filteredPosts = [];
-let currentPage = 1;
+let posts = [], filteredPosts = [], currentPage = 1, formImages = [], sliderImages = [], sliderIndex = 0;
 const ITEMS_PER_PAGE = 15; 
-let formImages = [];
-let sliderImages = [];
-let sliderIndex = 0;
+const CACHE_KEY = 'buildpro_posts_cache';
+
+// Mock Data สำรองข้อมูลกรณี API ล่ม
+function getMockData() {
+    return [
+        { id: 1, title: "รับเหมาก่อสร้างบ้านพักอาศัย ครบวงจร", price: 2500000, province: "กรุงเทพมหานคร", contact_name: "บิลด์โฮม จำกัด", phone: "089-123-4567", address: "เขตบางนา", body: "รับสร้างบ้านตามแบบ ประสบการณ์ 10 ปี" },
+        { id: 2, title: "ช่างไฟฟ้านอกสถานที่ แก้ไขไฟลัดวงจร", price: 500, province: "นนทบุรี", contact_name: "ช่างเอก", phone: "081-987-6543", address: "ปากเกร็ด", body: "บริการ 24 ชม. แก้ไขไฟดับ ไฟช็อต" },
+        { id: 3, title: "รับปูกระเบื้อง ห้องน้ำ ห้องครัว", price: 350, province: "ปทุมธานี", contact_name: "ช่างสมชาย", phone: "090-555-4444", address: "คลองหลวง", body: "งานละเอียด ฝีมือดี คิดราคาตาม ตร.ม." },
+        { id: 4, title: "ต่อเติมครัวหลังบ้าน ลงเข็มไมโครไพล์", price: 150000, province: "สมุทรปราการ", contact_name: "ช่างหนุ่ม", phone: "086-111-2222", address: "บางพลี", body: "รับประกันโครงสร้าง 1 ปี" },
+        { id: 5, title: "ทาสีบ้าน อาคารพาณิชย์", price: 5000, province: "ชลบุรี", contact_name: "Color Home", phone: "082-333-7777", address: "เมืองชลบุรี", body: "ใช้สีเกรด A ทนแดด ทนฝน" },
+        { id: 6, title: "รับติดตั้งหลังคาโรงจอดรถ", price: 25000, province: "เชียงใหม่", contact_name: "ล้านนา การช่าง", phone: "053-222-333", address: "สันทราย", body: "โครงเหล็กกัลวาไนซ์ แข็งแรง" }
+    ];
+}
 
 const dom = {
     loading: document.getElementById('loading'),
@@ -491,65 +401,102 @@ const dom = {
     sliderImg: document.getElementById('sliderMainImage'),
     sliderCount: document.getElementById('sliderCounter'),
     viewHero: document.getElementById('viewHeroImg'),
-    viewDate: document.getElementById('viewPublishDate'),
-    countTutors: document.getElementById('countTutors')
+    countTutors: document.getElementById('countTutors'),
+    statusDot: document.getElementById('statusDot')
 };
 
-function handleImgError(img) { 
-    img.src = 'https://placehold.co/600x400/f8fafc/cbd5e1?text=No+Image'; 
-}
-
+function handleImgError(img) { img.src = 'https://placehold.co/600x400/f8fafc/cbd5e1?text=BuildPro'; }
 function setScrollLock(lock) { document.body.classList.toggle('no-scroll', lock); }
 
 function init() {
     populateProvinces();
     loadPosts();
     [dom.qDesktop, dom.qMobile].forEach(el => el.addEventListener('input', debounce(applyFilters, 400)));
-    [dom.filterDesktop, dom.filterMobile].forEach(el => el.addEventListener('change', (e) => {
+    // Null check for desktop filter in case user deletes it from DOM manually
+    if(dom.filterDesktop) dom.filterDesktop.addEventListener('change', (e) => {
         dom.filterDesktop.value = dom.filterMobile.value = e.target.value;
         applyFilters();
-    }));
+    });
+    // Mobile always exists based on layout
+    dom.filterMobile.addEventListener('change', (e) => {
+        if(dom.filterDesktop) dom.filterDesktop.value = dom.filterMobile.value = e.target.value;
+        else dom.filterMobile.value = e.target.value;
+        applyFilters();
+    });
 }
 
 function populateProvinces() {
     const html = PROVINCES.map(p => `<option value="${p}">${p}</option>`).join('');
-    dom.province.innerHTML = `<option value="">-- เลือกจังหวัด --</option>${html}`;
-    dom.filterDesktop.innerHTML = dom.filterMobile.innerHTML = `<option value="all">ทุกพื้นที่ดำเนินการ</option>${html}`;
+    if(dom.province) dom.province.innerHTML = `<option value="">จังหวัด *</option>${html}`;
+    // Null checks before setting innerHTML
+    if(dom.filterDesktop) dom.filterDesktop.innerHTML = `<option value="all">พื้นที่ดำเนินการ (All)</option>${html}`;
+    if(dom.filterMobile) dom.filterMobile.innerHTML = `<option value="all">ทุกพื้นที่</option>${html}`;
 }
 
+// Optimized Load with Cache-First Strategy
 async function loadPosts() {
-    dom.loading.classList.remove('hidden');
-    dom.board.innerHTML = '';
+    // 1. Load Cache Immediately
+    const cachedData = localStorage.getItem(CACHE_KEY);
+    if (cachedData) {
+        try {
+            posts = JSON.parse(cachedData);
+            if(dom.countTutors) dom.countTutors.textContent = posts.length;
+            if(dom.statusDot) dom.statusDot.classList.replace('bg-gray-400', 'bg-yellow-500'); // Cached state
+            applyFilters();
+        } catch(e) { console.error("Cache Error", e); }
+    } else {
+        if(dom.loading) dom.loading.classList.remove('hidden');
+    }
+
+    // 2. Fetch Fresh Data in Background
     try {
         const res = await fetch(`${API_URL}?t=${Date.now()}`);
+        if (!res.ok) throw new Error('API Error');
         const data = await res.json();
-        posts = (Array.isArray(data) ? data : data.data || []).map(p => {
+        const rawPosts = (Array.isArray(data) ? data : data.data || []);
+        
+        // Process
+        const freshPosts = rawPosts.map(p => {
             let imgs = [];
             try {
                 const imgData = p.images;
                 if (typeof imgData === 'string' && imgData.trim().startsWith('[')) imgs = JSON.parse(imgData);
                 else if (imgData && imgData !== "null") imgs = [imgData];
             } catch(e) { imgs = p.images ? [p.images] : []; }
-            
-            imgs = imgs.map(url => {
-                if (typeof url === 'string' && url.includes('id=')) {
-                    const id = url.split('id=')[1].split('&')[0];
-                    return `https://lh3.googleusercontent.com/d/${id}`;
-                }
-                return url;
-            });
-            return { ...p, images: imgs };
+            return { ...p, images: imgs.map(url => url.includes('id=') ? `https://lh3.googleusercontent.com/d/${url.split('id=')[1].split('&')[0]}` : url) };
         }).reverse();
-        dom.countTutors.textContent = posts.length;
-    } catch (e) { posts = []; } finally {
-        dom.loading.classList.add('hidden');
+
+        // Update State & Cache
+        posts = freshPosts;
+        localStorage.setItem(CACHE_KEY, JSON.stringify(posts));
+        
+        // Update UI
+        if(dom.countTutors) dom.countTutors.textContent = posts.length;
+        if(dom.statusDot) {
+            dom.statusDot.classList.replace('bg-yellow-500', 'bg-green-500'); // Live state
+            dom.statusDot.classList.add('shadow-[0_0_5px_rgba(34,197,94,0.8)]');
+        }
         applyFilters();
+        if(dom.loading) dom.loading.classList.add('hidden');
+
+    } catch (e) {
+        console.warn('Fetch Failed, using fallback:', e);
+        if(dom.loading) dom.loading.classList.add('hidden');
+        if(dom.statusDot) dom.statusDot.classList.replace('bg-gray-400', 'bg-red-500'); // Error state
+        
+        if (posts.length === 0) {
+            posts = getMockData().map(p => ({...p, images: []}));
+            applyFilters();
+            Swal.fire({ toast: true, position: 'top', icon: 'info', title: 'โหมดออฟไลน์ (แสดงข้อมูลตัวอย่าง)', timer: 3000, showConfirmButton: false });
+        }
     }
 }
 
 function applyFilters() {
     const q = (dom.qDesktop.value || dom.qMobile.value).toLowerCase();
-    const prov = dom.filterDesktop.value;
+    // Safe access to value
+    const prov = dom.filterDesktop ? dom.filterDesktop.value : (dom.filterMobile ? dom.filterMobile.value : 'all');
+    
     filteredPosts = posts.filter(p => {
         const matchText = (String(p.title)+String(p.body)+String(p.province)).toLowerCase().includes(q);
         const matchProv = prov === 'all' || p.province === prov;
@@ -565,37 +512,25 @@ function renderBoard() {
     const items = filteredPosts.slice(start, start + ITEMS_PER_PAGE);
     
     if (items.length === 0) {
-        dom.board.innerHTML = `<div class="col-span-full py-24 text-center text-slate-400 italic text-sm tracking-widest border border-dashed border-slate-300 rounded-2xl bg-white"><i class="fa-solid fa-helmet-safety text-4xl mb-4 opacity-20"></i><br>ไม่พบข้อมูล</div>`;
+        dom.board.innerHTML = `<div class="col-span-full py-16 text-center text-slate-400 text-xs italic tracking-wide">ไม่พบข้อมูล</div>`;
     } else {
         items.forEach(p => {
             const thumb = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/400x300/f8fafc/cbd5e1?text=BuildPro';
             const card = document.createElement('div');
-            card.className = "job-card rounded-lg overflow-hidden cursor-pointer group";
+            card.className = "job-card rounded-lg overflow-hidden cursor-pointer bg-white shadow-sm border border-slate-100";
             card.onclick = () => viewDetail(p.id);
-            // Added loading="lazy" and decoding="async" for performance
             card.innerHTML = `
-                <div class="aspect-[4/3] bg-slate-100 overflow-hidden relative">
-                    <img src="${thumb}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/400x300/f8fafc/cbd5e1?text=BuildPro'">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/30 via-transparent to-transparent opacity-60"></div>
-                    <div class="absolute top-2 left-2 bg-white/95 backdrop-blur-sm px-1.5 py-0.5 rounded text-[8px] font-bold text-slate-700 uppercase tracking-wide shadow-sm flex items-center gap-1 border border-white/50">
+                <div class="aspect-[4/3] bg-slate-100 relative">
+                    <img src="${thumb}" class="w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/400x300/f8fafc/cbd5e1?text=BuildPro'">
+                    <div class="absolute top-2 left-2 bg-white/90 px-1.5 py-0.5 rounded text-[8px] font-bold text-slate-700 shadow-sm border border-white">
                        <i class="fa-solid fa-location-dot text-yellow-500"></i> ${p.province}
                     </div>
                 </div>
-                <div class="p-3 flex flex-col flex-grow relative bg-white">
-                    <div class="mb-2">
-                        <h3 class="font-bold text-slate-800 text-xs sm:text-sm leading-snug line-clamp-2 h-9">${p.title}</h3>
-                    </div>
-                    
-                    <div class="flex items-center gap-1.5 text-[9px] text-slate-400 mb-3 border-b border-slate-50 pb-2">
-                         <div class="w-4 h-4 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"><i class="fa-solid fa-user-gear"></i></div>
-                         <span class="font-medium truncate">${p.contact_name || 'Pro'}</span>
-                    </div>
-
-                    <div class="mt-auto flex items-center justify-between">
-                        <div class="flex flex-col">
-                            <span class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Start</span>
-                            <span class="text-slate-900 font-bold text-xs font-mono">฿${Number(p.price).toLocaleString()}</span>
-                        </div>
+                <div class="p-3">
+                    <h3 class="font-bold text-slate-800 text-xs leading-snug line-clamp-2 h-8 mb-2">${p.title}</h3>
+                    <div class="flex justify-between items-center border-t border-slate-50 pt-2">
+                        <span class="text-[9px] text-slate-400 font-bold">ราคาเริ่มต้น</span>
+                        <span class="text-slate-900 font-bold text-xs">฿${Number(p.price).toLocaleString()}</span>
                     </div>
                 </div>
             `;
@@ -622,11 +557,10 @@ function viewDetail(id) {
     dom.viewHero.src = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/600x400/f1f5f9/cbd5e1?text=No+Image';
     document.getElementById('viewTitle').textContent = p.title;
     document.getElementById('viewPrice').textContent = `${Number(p.price).toLocaleString()}`;
-    document.getElementById('viewContact').textContent = p.contact_name || 'Professional Contractor';
-    document.getElementById('viewProvince').textContent = p.province;
-    document.getElementById('viewAddress').textContent = p.address || 'Flexible / On-Site';
+    document.getElementById('viewContact').textContent = p.contact_name || 'ช่างมืออาชีพ';
+    document.getElementById('viewProvince').querySelector('span').textContent = p.province;
+    document.getElementById('viewAddress').querySelector('span').textContent = p.address || 'ไม่ระบุ';
     document.getElementById('viewBody').textContent = p.body || '-';
-    // dom.viewDate.textContent = `REF: ${p.id}`;
     document.getElementById('btnCall').href = p.phone ? `tel:${p.phone}` : "#";
     
     const imgBox = document.getElementById('viewImages');
@@ -637,7 +571,7 @@ function viewDetail(id) {
     sliderImages.forEach((url, i) => {
         const img = document.createElement('img');
         img.src = url;
-        img.className = `h-14 w-20 rounded-lg object-cover border-2 transition-all cursor-pointer flex-shrink-0 ${i===0?'border-white opacity-100 shadow-md':'border-white/20 opacity-60'}`;
+        img.className = `h-12 w-16 rounded object-cover border border-slate-200 cursor-pointer ${i===0?'ring-2 ring-yellow-400':''}`;
         img.onclick = (e) => { e.stopPropagation(); openSlider(i); };
         imgBox.appendChild(img);
     });
@@ -651,23 +585,19 @@ function closeViewModal() { dom.viewDlg.close(); setScrollLock(false); }
 
 async function confirmDelete(id) {
     closeViewModal(); 
-    const res = await Swal.fire({
-        title: 'Archive?',
-        text: 'Confirm to archive this post.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#0f172a',
-        cancelButtonColor: '#94a3b8',
-        confirmButtonText: 'Yes',
-        background: '#ffffff',
-        color: '#1e293b'
-    });
+    const res = await Swal.fire({ title: 'ลบประกาศ?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#0f172a', cancelButtonColor: '#94a3b8', confirmButtonText: 'ยืนยัน' });
     if (res.isConfirmed) {
-        Swal.fire({ title: 'Processing...', allowOutsideClick: false, background: '#ffffff', color: '#1e293b', didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'กำลังลบ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
         try {
             await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', id: id }) });
-            setTimeout(() => { loadPosts(); Swal.fire({ icon: 'success', title: 'Archived', background: '#ffffff', color: '#1e293b', showConfirmButton: false, timer: 1000 }); }, 1000);
-        } catch (e) { Swal.fire('Error', 'Failed', 'error'); }
+            
+            // Optimistic update
+            posts = posts.filter(p => p.id !== id);
+            localStorage.setItem(CACHE_KEY, JSON.stringify(posts));
+            applyFilters();
+            
+            Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', timer: 1000, showConfirmButton: false });
+        } catch (e) { Swal.fire('Error', 'ผิดพลาด', 'error'); }
     }
 }
 
@@ -684,13 +614,12 @@ function renderPreview() {
     dom.imgPreview.innerHTML = '';
     formImages.forEach((src, i) => {
         const div = document.createElement('div');
-        div.className = "relative aspect-square rounded-lg overflow-hidden border border-slate-200 shadow-sm group";
-        div.innerHTML = `<img src="${src}" class="w-full h-full object-cover">
-            <button onclick="removeImg(${i})" class="absolute top-1 right-1 bg-white text-red-500 w-5 h-5 rounded-full flex items-center justify-center text-[10px] shadow-sm"><i class="fa-solid fa-trash"></i></button>`;
+        div.className = "relative aspect-square rounded overflow-hidden border border-slate-200";
+        div.innerHTML = `<img src="${src}" class="w-full h-full object-cover"><button onclick="removeImg(${i})" class="absolute top-0 right-0 bg-red-500 text-white w-4 h-4 flex items-center justify-center text-[8px]"><i class="fa-solid fa-xmark"></i></button>`;
         dom.imgPreview.appendChild(div);
     });
     dom.imgCount.textContent = `${formImages.length}/3`;
-    dom.uploadBtn.classList.toggle('hidden', formImages.length >= 3);
+    dom.uploadBtn.parentElement.classList.toggle('hidden', formImages.length >= 3);
 }
 
 function removeImg(i) { formImages.splice(i, 1); renderPreview(); }
@@ -702,52 +631,42 @@ async function savePost() {
         if (!el.value.trim()) { el.classList.add('field-error'); ok = false; }
         else el.classList.remove('field-error');
     });
-    
-    if (!ok) {
-        Swal.fire({ icon: 'error', title: 'Missing Data', text: 'Please fill required fields', background: '#ffffff', color: '#1e293b' });
-        return;
-    }
+    if (!ok) return Swal.fire({ icon: 'error', title: 'ข้อมูลไม่ครบ', text: 'กรุณากรอกข้อมูลจำเป็น *', timer: 1500, showConfirmButton: false });
 
     const btn = document.getElementById('btnSave');
-    btn.disabled = true;
-    dom.btnSaveText.textContent = "Sending...";
-    
-    const payload = {
-        action: 'add', id: Date.now(), title: dom.title.value, price: Number(dom.price.value),
-        province: dom.province.value, address: dom.address.value, contact_name: dom.contactName.value,
-        phone: dom.phone.value, body: dom.body.value, images: formImages
-    };
+    btn.disabled = true; dom.btnSaveText.textContent = "กำลังส่ง...";
     
     try {
-        await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+        await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({
+            action: 'add', id: Date.now(), title: dom.title.value, price: Number(dom.price.value),
+            province: dom.province.value, address: dom.address.value, contact_name: dom.contactName.value,
+            phone: dom.phone.value, body: dom.body.value, images: formImages
+        })});
+        
         closeModal();
-        Swal.fire({ title: 'Sent', text: 'Data submitted', icon: 'success', background: '#ffffff', color: '#1e293b', timer: 1500, showConfirmButton: false });
-        setTimeout(() => loadPosts(), 1500);
-    } catch (e) { Swal.fire('Error', 'Failed', 'error'); } 
-    finally { btn.disabled = false; dom.btnSaveText.textContent = "Confirm"; }
+        Swal.fire({ title: 'สำเร็จ', icon: 'success', timer: 1500, showConfirmButton: false });
+        setTimeout(() => loadPosts(), 1000);
+    } catch (e) { Swal.fire('Error', 'ผิดพลาด', 'error'); } 
+    finally { btn.disabled = false; dom.btnSaveText.textContent = "ยืนยันลงประกาศ"; }
 }
 
 function openSlider(i) {
     sliderIndex = i;
     dom.sliderImg.src = sliderImages[i];
-    dom.sliderCount.textContent = `${i + 1} / ${sliderImages.length}`;
-    if (dom.viewDlg.open) dom.viewDlg.close();
-    dom.slider.classList.replace('slider-hidden', 'slider-visible');
+    dom.sliderCount.textContent = `${i + 1}/${sliderImages.length}`;
+    dom.slider.classList.remove('hidden'); dom.slider.classList.add('flex');
     setScrollLock(true);
 }
 
-function closeImageSlider() { dom.slider.classList.replace('slider-visible', 'slider-hidden'); setScrollLock(false); }
+function closeImageSlider() { dom.slider.classList.add('hidden'); dom.slider.classList.remove('flex'); setScrollLock(false); }
 
 function changeSlide(n) {
     sliderIndex = (sliderIndex + n + sliderImages.length) % sliderImages.length;
     dom.sliderImg.src = sliderImages[sliderIndex];
-    dom.sliderCount.textContent = `${sliderIndex + 1} / ${sliderImages.length}`;
+    dom.sliderCount.textContent = `${sliderIndex + 1}/${sliderImages.length}`;
 }
 
-function debounce(fn, t) {
-    let timer;
-    return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), t); };
-}
+function debounce(fn, t) { let timer; return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), t); }; }
 
 function resetForm() {
     dom.title.value = dom.price.value = dom.province.value = dom.contactName.value = dom.phone.value = dom.address.value = dom.body.value = '';
@@ -757,7 +676,9 @@ function resetForm() {
 
 function refreshApp() {
     dom.qDesktop.value = dom.qMobile.value = '';
-    dom.filterDesktop.value = dom.filterMobile.value = 'all';
+    // Check if element exists before accessing value
+    if(dom.filterDesktop) dom.filterDesktop.value = 'all';
+    if(dom.filterMobile) dom.filterMobile.value = 'all';
     loadPosts();
 }
 
