@@ -141,7 +141,6 @@
       <div class="flex items-center gap-3">
          <!-- Desktop Filter -->
          <div class="hidden lg:flex bg-slate-100 p-1 rounded-lg border border-slate-200">
-             <!-- Fixed: Added missing select element here -->
              <select id="filter_province_desktop" class="bg-transparent px-2 py-1.5 text-sm outline-none cursor-pointer border-r border-slate-200 text-slate-700 font-medium hover:text-slate-900 transition-colors mr-2">
                 <option value="all">พื้นที่ดำเนินการ (All)</option>
              </select>
@@ -227,7 +226,12 @@
             <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-slate-900 to-transparent">
                 <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar" id="viewImages"></div>
             </div>
-            <button onclick="closeViewModal()" class="absolute top-3 right-3 bg-black/30 text-white w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm md:hidden"><i class="fa-solid fa-xmark"></i></button>
+            
+            <!-- Mobile Actions (Delete & Close) -->
+            <div class="absolute top-3 right-3 flex gap-2 md:hidden z-20">
+                <button id="btnDeletePostMobile" class="bg-black/30 text-white w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm hover:bg-red-600 transition-colors border border-white/10"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                <button onclick="closeViewModal()" class="bg-black/30 text-white w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/10"><i class="fa-solid fa-xmark text-sm"></i></button>
+            </div>
         </div>
         
         <!-- Info Section -->
@@ -237,6 +241,7 @@
                     <div class="px-2 py-1 bg-slate-100 text-slate-800 text-[10px] font-bold rounded border border-slate-200 uppercase tracking-wide">
                         <i class="fa-solid fa-check-circle text-green-500 mr-1"></i> Pro
                     </div>
+                    <!-- Desktop Actions -->
                     <div class="flex gap-2 hidden md:flex">
                         <button id="btnDeletePost" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-trash-can"></i></button>
                         <button onclick="closeViewModal()" class="text-slate-400 hover:text-slate-900"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -355,7 +360,7 @@
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwYmraRxtEBQxYuY4SbN1yNJvolm9SnKlD4uP1vBl4jH89_lpyMwQELqhB1d8P7S3iQ/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbwYvY-XHZDxETr9Oi79xymX3yYUCO273K_3z2MQucWh4vpMbcJ5AiyiHPCeAmYr4XsP/exec"; 
 const PROVINCES = ["กรุงเทพมหานคร", "กระบี่", "กาญจนบุรี", "กาฬสินธุ์", "กำแพงเพชร", "ขอนแก่น", "จันทบุรี", "ฉะเชิงเทรา", "ชลบุรี", "ชัยนาท", "ชัยภูมิ", "ชุมพร", "เชียงราย", "เชียงใหม่", "ตรัง", "ตราด", "ตาก", "นครนายก", "นครปฐม", "นครพนม", "นครราชสีมา", "นครศรีธรรมราช", "นครสวรรค์", "นนทบุรี", "นราธิวาส", "น่าน", "บึงกาฬ", "บุรีรัมย์", "ปทุมธานี", "ประจวบคีรีขันธ์", "ปราจีนบุรี", "ปัตตานี", "พระนครศรีอยุธยา", "พะเยา", "พังงา", "พัทลุง", "พิจิตร", "พิษณุโลก", "เพชรบุรี", "เพชรบูรณ์", "แพร่", "ภูเก็ต", "มหาสารคาม", "มุกดาหาร", "แม่ฮ่องสอน", "ยโสธร", "ยะลา", "ร้อยเอ็ด", "ระนอง", "ระยอง", "ราชบุรี", "ลพบุรี", "ลำปาง", "ลำพูน", "เลย", "ศรีสะเกษ", "สกลนคร", "สงขลา", "สตูล", "สมุทรปราการ", "สมุทรสงคราม", "สมุทรสาคร", "สระแก้ว", "สระบุรี", "สิงห์บุรี", "สุโขทัย", "สุพรรณบุรี", "สุราษฎร์ธานี", "สุรินทร์", "หนองคาย", "หนองบัวลำภู", "อ่างทอง", "อำนาจเจริญ", "อุดรธานี", "อุตรดิตถ์", "อุทัยธานี", "อุบลราชธานี"].sort();
 
 let posts = [], filteredPosts = [], currentPage = 1, formImages = [], sliderImages = [], sliderIndex = 0;
@@ -577,6 +582,13 @@ function viewDetail(id) {
     });
 
     document.getElementById('btnDeletePost').onclick = (e) => { e.stopPropagation(); confirmDelete(p.id); };
+    
+    // Bind mobile delete button
+    const btnDeleteMobile = document.getElementById('btnDeletePostMobile');
+    if(btnDeleteMobile) {
+        btnDeleteMobile.onclick = (e) => { e.stopPropagation(); confirmDelete(p.id); };
+    }
+
     dom.viewDlg.showModal();
     setScrollLock(true);
 }
