@@ -360,22 +360,19 @@
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwYvY-XHZDxETr9Oi79xymX3yYUCO273K_3z2MQucWh4vpMbcJ5AiyiHPCeAmYr4XsP/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbwYmraRxtEBQxYuY4SbN1yNJvolm9SnKlD4uP1vBl4jH89_lpyMwQELqhB1d8P7S3iQ/exec"; 
 const PROVINCES = ["กรุงเทพมหานคร", "กระบี่", "กาญจนบุรี", "กาฬสินธุ์", "กำแพงเพชร", "ขอนแก่น", "จันทบุรี", "ฉะเชิงเทรา", "ชลบุรี", "ชัยนาท", "ชัยภูมิ", "ชุมพร", "เชียงราย", "เชียงใหม่", "ตรัง", "ตราด", "ตาก", "นครนายก", "นครปฐม", "นครพนม", "นครราชสีมา", "นครศรีธรรมราช", "นครสวรรค์", "นนทบุรี", "นราธิวาส", "น่าน", "บึงกาฬ", "บุรีรัมย์", "ปทุมธานี", "ประจวบคีรีขันธ์", "ปราจีนบุรี", "ปัตตานี", "พระนครศรีอยุธยา", "พะเยา", "พังงา", "พัทลุง", "พิจิตร", "พิษณุโลก", "เพชรบุรี", "เพชรบูรณ์", "แพร่", "ภูเก็ต", "มหาสารคาม", "มุกดาหาร", "แม่ฮ่องสอน", "ยโสธร", "ยะลา", "ร้อยเอ็ด", "ระนอง", "ระยอง", "ราชบุรี", "ลพบุรี", "ลำปาง", "ลำพูน", "เลย", "ศรีสะเกษ", "สกลนคร", "สงขลา", "สตูล", "สมุทรปราการ", "สมุทรสงคราม", "สมุทรสาคร", "สระแก้ว", "สระบุรี", "สิงห์บุรี", "สุโขทัย", "สุพรรณบุรี", "สุราษฎร์ธานี", "สุรินทร์", "หนองคาย", "หนองบัวลำภู", "อ่างทอง", "อำนาจเจริญ", "อุดรธานี", "อุตรดิตถ์", "อุทัยธานี", "อุบลราชธานี"].sort();
 
 let posts = [], filteredPosts = [], currentPage = 1, formImages = [], sliderImages = [], sliderIndex = 0;
 const ITEMS_PER_PAGE = 15; 
 const CACHE_KEY = 'buildpro_posts_cache';
 
-// Mock Data สำรองข้อมูลกรณี API ล่ม
+// Mock Data
 function getMockData() {
     return [
         { id: 1, title: "รับเหมาก่อสร้างบ้านพักอาศัย ครบวงจร", price: 2500000, province: "กรุงเทพมหานคร", contact_name: "บิลด์โฮม จำกัด", phone: "089-123-4567", address: "เขตบางนา", body: "รับสร้างบ้านตามแบบ ประสบการณ์ 10 ปี" },
         { id: 2, title: "ช่างไฟฟ้านอกสถานที่ แก้ไขไฟลัดวงจร", price: 500, province: "นนทบุรี", contact_name: "ช่างเอก", phone: "081-987-6543", address: "ปากเกร็ด", body: "บริการ 24 ชม. แก้ไขไฟดับ ไฟช็อต" },
-        { id: 3, title: "รับปูกระเบื้อง ห้องน้ำ ห้องครัว", price: 350, province: "ปทุมธานี", contact_name: "ช่างสมชาย", phone: "090-555-4444", address: "คลองหลวง", body: "งานละเอียด ฝีมือดี คิดราคาตาม ตร.ม." },
-        { id: 4, title: "ต่อเติมครัวหลังบ้าน ลงเข็มไมโครไพล์", price: 150000, province: "สมุทรปราการ", contact_name: "ช่างหนุ่ม", phone: "086-111-2222", address: "บางพลี", body: "รับประกันโครงสร้าง 1 ปี" },
-        { id: 5, title: "ทาสีบ้าน อาคารพาณิชย์", price: 5000, province: "ชลบุรี", contact_name: "Color Home", phone: "082-333-7777", address: "เมืองชลบุรี", body: "ใช้สีเกรด A ทนแดด ทนฝน" },
-        { id: 6, title: "รับติดตั้งหลังคาโรงจอดรถ", price: 25000, province: "เชียงใหม่", contact_name: "ล้านนา การช่าง", phone: "053-222-333", address: "สันทราย", body: "โครงเหล็กกัลวาไนซ์ แข็งแรง" }
+        { id: 3, title: "รับปูกระเบื้อง ห้องน้ำ ห้องครัว", price: 350, province: "ปทุมธานี", contact_name: "ช่างสมชาย", phone: "090-555-4444", address: "คลองหลวง", body: "งานละเอียด ฝีมือดี คิดราคาตาม ตร.ม." }
     ];
 }
 
@@ -417,12 +414,10 @@ function init() {
     populateProvinces();
     loadPosts();
     [dom.qDesktop, dom.qMobile].forEach(el => el.addEventListener('input', debounce(applyFilters, 400)));
-    // Null check for desktop filter in case user deletes it from DOM manually
     if(dom.filterDesktop) dom.filterDesktop.addEventListener('change', (e) => {
         dom.filterDesktop.value = dom.filterMobile.value = e.target.value;
         applyFilters();
     });
-    // Mobile always exists based on layout
     dom.filterMobile.addEventListener('change', (e) => {
         if(dom.filterDesktop) dom.filterDesktop.value = dom.filterMobile.value = e.target.value;
         else dom.filterMobile.value = e.target.value;
@@ -433,34 +428,30 @@ function init() {
 function populateProvinces() {
     const html = PROVINCES.map(p => `<option value="${p}">${p}</option>`).join('');
     if(dom.province) dom.province.innerHTML = `<option value="">จังหวัด *</option>${html}`;
-    // Null checks before setting innerHTML
     if(dom.filterDesktop) dom.filterDesktop.innerHTML = `<option value="all">พื้นที่ดำเนินการ (All)</option>${html}`;
     if(dom.filterMobile) dom.filterMobile.innerHTML = `<option value="all">ทุกพื้นที่</option>${html}`;
 }
 
-// Optimized Load with Cache-First Strategy
+// Fixed loadPosts with improved Image Mapping logic
 async function loadPosts() {
-    // 1. Load Cache Immediately
     const cachedData = localStorage.getItem(CACHE_KEY);
     if (cachedData) {
         try {
             posts = JSON.parse(cachedData);
             if(dom.countTutors) dom.countTutors.textContent = posts.length;
-            if(dom.statusDot) dom.statusDot.classList.replace('bg-gray-400', 'bg-yellow-500'); // Cached state
+            if(dom.statusDot) dom.statusDot.classList.replace('bg-gray-400', 'bg-yellow-500');
             applyFilters();
         } catch(e) { console.error("Cache Error", e); }
     } else {
         if(dom.loading) dom.loading.classList.remove('hidden');
     }
 
-    // 2. Fetch Fresh Data in Background
     try {
         const res = await fetch(`${API_URL}?t=${Date.now()}`);
         if (!res.ok) throw new Error('API Error');
         const data = await res.json();
         const rawPosts = (Array.isArray(data) ? data : data.data || []);
         
-        // Process
         const freshPosts = rawPosts.map(p => {
             let imgs = [];
             try {
@@ -468,38 +459,54 @@ async function loadPosts() {
                 if (typeof imgData === 'string' && imgData.trim().startsWith('[')) imgs = JSON.parse(imgData);
                 else if (imgData && imgData !== "null") imgs = [imgData];
             } catch(e) { imgs = p.images ? [p.images] : []; }
-            return { ...p, images: imgs.map(url => url.includes('id=') ? `https://lh3.googleusercontent.com/d/${url.split('id=')[1].split('&')[0]}` : url) };
+            
+            // ✅ ใช้เวอร์ชันใหม่ (รองรับ 3 รูป 100%) และจัดการขนาดรูปภาพ
+            const processedImages = imgs.map(url => {
+                if (!url) return '';
+                url = url.replace(/[\n\r"]/g, '').trim();
+
+                // ถ้าเป็น lh3 แต่ยังไม่มี size
+                if (url.includes('lh3.googleusercontent.com/d/') && !url.includes('=')) {
+                    return url + '=s1000';
+                }
+
+                // กรณี uc?id=...
+                if (url.includes('id=')) {
+                    const id = url.split('id=')[1].split('&')[0];
+                    return `https://lh3.googleusercontent.com/d/${id}=s1000`;
+                }
+
+                return url;
+            });
+
+            return { ...p, images: processedImages };
         }).reverse();
 
-        // Update State & Cache
         posts = freshPosts;
         localStorage.setItem(CACHE_KEY, JSON.stringify(posts));
         
-        // Update UI
         if(dom.countTutors) dom.countTutors.textContent = posts.length;
         if(dom.statusDot) {
-            dom.statusDot.classList.replace('bg-yellow-500', 'bg-green-500'); // Live state
+            dom.statusDot.classList.replace('bg-yellow-500', 'bg-green-500');
             dom.statusDot.classList.add('shadow-[0_0_5px_rgba(34,197,94,0.8)]');
         }
         applyFilters();
         if(dom.loading) dom.loading.classList.add('hidden');
 
     } catch (e) {
-        console.warn('Fetch Failed, using fallback:', e);
+        console.warn('Fetch Failed:', e);
         if(dom.loading) dom.loading.classList.add('hidden');
-        if(dom.statusDot) dom.statusDot.classList.replace('bg-gray-400', 'bg-red-500'); // Error state
+        if(dom.statusDot) dom.statusDot.classList.replace('bg-gray-400', 'bg-red-500');
         
         if (posts.length === 0) {
             posts = getMockData().map(p => ({...p, images: []}));
             applyFilters();
-            Swal.fire({ toast: true, position: 'top', icon: 'info', title: 'โหมดออฟไลน์ (แสดงข้อมูลตัวอย่าง)', timer: 3000, showConfirmButton: false });
         }
     }
 }
 
 function applyFilters() {
     const q = (dom.qDesktop.value || dom.qMobile.value).toLowerCase();
-    // Safe access to value
     const prov = dom.filterDesktop ? dom.filterDesktop.value : (dom.filterMobile ? dom.filterMobile.value : 'all');
     
     filteredPosts = posts.filter(p => {
@@ -582,12 +589,8 @@ function viewDetail(id) {
     });
 
     document.getElementById('btnDeletePost').onclick = (e) => { e.stopPropagation(); confirmDelete(p.id); };
-    
-    // Bind mobile delete button
     const btnDeleteMobile = document.getElementById('btnDeletePostMobile');
-    if(btnDeleteMobile) {
-        btnDeleteMobile.onclick = (e) => { e.stopPropagation(); confirmDelete(p.id); };
-    }
+    if(btnDeleteMobile) btnDeleteMobile.onclick = (e) => { e.stopPropagation(); confirmDelete(p.id); };
 
     dom.viewDlg.showModal();
     setScrollLock(true);
@@ -602,12 +605,9 @@ async function confirmDelete(id) {
         Swal.fire({ title: 'กำลังลบ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
         try {
             await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', id: id }) });
-            
-            // Optimistic update
             posts = posts.filter(p => p.id !== id);
             localStorage.setItem(CACHE_KEY, JSON.stringify(posts));
             applyFilters();
-            
             Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', timer: 1000, showConfirmButton: false });
         } catch (e) { Swal.fire('Error', 'ผิดพลาด', 'error'); }
     }
@@ -688,7 +688,6 @@ function resetForm() {
 
 function refreshApp() {
     dom.qDesktop.value = dom.qMobile.value = '';
-    // Check if element exists before accessing value
     if(dom.filterDesktop) dom.filterDesktop.value = 'all';
     if(dom.filterMobile) dom.filterMobile.value = 'all';
     loadPosts();
