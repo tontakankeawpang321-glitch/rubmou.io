@@ -273,7 +273,10 @@
             <div class="p-4 border-t border-slate-100 bg-white flex-none sticky bottom-0">
                 <div class="flex justify-between items-center text-xs mb-3">
                     <span class="text-slate-400">ผู้รับเหมา:</span>
-                    <span id="viewContact" class="font-bold text-slate-800"></span>
+                    <div class="text-right">
+                        <div id="viewContact" class="font-bold text-slate-800 leading-tight"></div>
+                        <a id="viewPhoneShow" href="#" class="text-[10px] text-slate-500 hover:text-yellow-600 font-mono font-medium"></a>
+                    </div>
                 </div>
                 <a id="btnCall" href="#" class="w-full bg-slate-900 text-white py-3 rounded-lg font-bold text-sm shadow-md active:scale-95 transition-transform flex items-center justify-center gap-2">
                     <i class="fa-solid fa-phone text-yellow-400 icon-3d"></i> ติดต่อสอบถาม
@@ -434,17 +437,22 @@ function populateProvinces() {
 
 // Fixed loadPosts with improved Image Mapping logic
 async function loadPosts() {
-    const cachedData = localStorage.getItem(CACHE_KEY);
-    if (cachedData) {
-        try {
-            posts = JSON.parse(cachedData);
-            if(dom.countTutors) dom.countTutors.textContent = posts.length;
-            if(dom.statusDot) dom.statusDot.classList.replace('bg-gray-400', 'bg-yellow-500');
-            applyFilters();
-        } catch(e) { console.error("Cache Error", e); }
-    } else {
-        if(dom.loading) dom.loading.classList.remove('hidden');
-    }
+    // ❌ ปิด cache ชั่วคราว (ตามที่แจ้งแก้ไข)
+    // const cachedData = localStorage.getItem(CACHE_KEY);
+    // if (cachedData) {
+    //     try {
+    //         posts = JSON.parse(cachedData);
+    //         if(dom.countTutors) dom.countTutors.textContent = posts.length;
+    //         if(dom.statusDot) dom.statusDot.classList.replace('bg-gray-400', 'bg-yellow-500');
+    //         applyFilters();
+    //     } catch(e) { console.error("Cache Error", e); }
+    // } else {
+    //     if(dom.loading) dom.loading.classList.remove('hidden');
+    // }
+
+    // ✅ ล้าง Cache ทันที เพื่อบังคับโหลดใหม่
+    localStorage.removeItem(CACHE_KEY);
+    if(dom.loading) dom.loading.classList.remove('hidden');
 
     try {
         const res = await fetch(`${API_URL}?t=${Date.now()}`);
@@ -569,11 +577,27 @@ function viewDetail(id) {
     dom.viewHero.src = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/600x400/f1f5f9/cbd5e1?text=No+Image';
     document.getElementById('viewTitle').textContent = p.title;
     document.getElementById('viewPrice').textContent = `${Number(p.price).toLocaleString()}`;
+    // Show name
     document.getElementById('viewContact').textContent = p.contact_name || 'ช่างมืออาชีพ';
+    
+    // 🔥 Phone Logic: Sanitize & Display
+    const rawPhone = p.phone || '';
+    const cleanPhone = rawPhone.replace(/[^0-9]/g, ''); // Remove all non-numeric for tel link
+    const telLink = cleanPhone ? `tel:${cleanPhone}` : '#';
+    
+    // Show Phone Text
+    const phoneEl = document.getElementById('viewPhoneShow');
+    if (phoneEl) {
+        phoneEl.textContent = rawPhone || '';
+        phoneEl.href = telLink;
+    }
+
     document.getElementById('viewProvince').querySelector('span').textContent = p.province;
     document.getElementById('viewAddress').querySelector('span').textContent = p.address || 'ไม่ระบุ';
     document.getElementById('viewBody').textContent = p.body || '-';
-    document.getElementById('btnCall').href = p.phone ? `tel:${p.phone}` : "#";
+    
+    // Main Call Button
+    document.getElementById('btnCall').href = telLink;
     
     const imgBox = document.getElementById('viewImages');
     imgBox.innerHTML = '';
@@ -604,7 +628,15 @@ async function confirmDelete(id) {
     if (res.isConfirmed) {
         Swal.fire({ title: 'กำลังลบ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
         try {
-            await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', id: id }) });
+            // 🔧 แก้ไข Frontend: ระบุ Header และเลิกใช้ no-cors
+            const response = await fetch(API_URL, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'delete', id: id }) 
+            });
+
+            if (!response.ok) throw new Error('API Response Error');
+
             posts = posts.filter(p => p.id !== id);
             localStorage.setItem(CACHE_KEY, JSON.stringify(posts));
             applyFilters();
@@ -649,16 +681,33 @@ async function savePost() {
     btn.disabled = true; dom.btnSaveText.textContent = "กำลังส่ง...";
     
     try {
-        await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({
-            action: 'add', id: Date.now(), title: dom.title.value, price: Number(dom.price.value),
-            province: dom.province.value, address: dom.address.value, contact_name: dom.contactName.value,
-            phone: dom.phone.value, body: dom.body.value, images: formImages
-        })});
+        // 🔧 แก้ไข Frontend: ระบุ Header และเลิกใช้ no-cors
+        const response = await fetch(API_URL, { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'add', 
+                id: Date.now(), 
+                title: dom.title.value, 
+                price: Number(dom.price.value),
+                province: dom.province.value, 
+                address: dom.address.value, 
+                contact_name: dom.contactName.value,
+                phone: dom.phone.value, 
+                body: dom.body.value, 
+                images: formImages
+            })
+        });
+        
+        if (!response.ok) throw new Error('API Response Error');
         
         closeModal();
         Swal.fire({ title: 'สำเร็จ', icon: 'success', timer: 1500, showConfirmButton: false });
         setTimeout(() => loadPosts(), 1000);
-    } catch (e) { Swal.fire('Error', 'ผิดพลาด', 'error'); } 
+    } catch (e) { 
+        console.error(e);
+        Swal.fire('Error', 'ผิดพลาด', 'error'); 
+    } 
     finally { btn.disabled = false; dom.btnSaveText.textContent = "ยืนยันลงประกาศ"; }
 }
 
