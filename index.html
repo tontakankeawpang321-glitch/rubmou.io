@@ -522,33 +522,60 @@ function renderBoard() {
     dom.board.innerHTML = '';
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
     const items = filteredPosts.slice(start, start + ITEMS_PER_PAGE);
-    
+
     if (items.length === 0) {
-        dom.board.innerHTML = `<div class="col-span-full py-16 text-center text-slate-400 text-xs italic tracking-wide">ไม่พบข้อมูล</div>`;
-    } else {
-        items.forEach(p => {
-            const thumb = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/400x300/f8fafc/cbd5e1?text=BuildPro';
-            const card = document.createElement('div');
-            card.className = "job-card rounded-lg overflow-hidden cursor-pointer bg-white shadow-sm border border-slate-100";
-            card.onclick = () => viewDetail(p.id);
-            card.innerHTML = `
-                <div class="aspect-[4/3] bg-slate-100 relative">
-                    <img src="${thumb}" class="w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/400x300/f8fafc/cbd5e1?text=BuildPro'">
-                    <div class="absolute top-2 left-2 bg-white/90 px-1.5 py-0.5 rounded text-[8px] font-bold text-slate-700 shadow-sm border border-white">
-                       <i class="fa-solid fa-location-dot text-yellow-500"></i> ${p.province}
-                    </div>
-                </div>
-                <div class="p-3">
-                    <h3 class="font-bold text-slate-800 text-xs leading-snug line-clamp-2 h-8 mb-2">${p.title}</h3>
-                    <div class="flex justify-between items-center border-t border-slate-50 pt-2">
-                        <span class="text-[9px] text-slate-400 font-bold">ราคาเริ่มต้น</span>
-                        <span class="text-slate-900 font-bold text-xs">฿${Number(p.price).toLocaleString()}</span>
-                    </div>
-                </div>
-            `;
-            dom.board.appendChild(card);
-        });
+        dom.board.innerHTML = `
+          <div class="col-span-full py-16 text-center text-slate-400 text-xs italic tracking-wide">
+            ไม่พบข้อมูล
+          </div>`;
+        return;
     }
+
+    items.forEach(p => {
+        // ✅ เตรียมรูปสูงสุด 3 รูป
+        let imgs = [];
+        if (Array.isArray(p.images) && p.images.length > 0) {
+            imgs = p.images.slice(0, 3);
+        } else {
+            imgs = ['https://placehold.co/400x300/f8fafc/cbd5e1?text=BuildPro'];
+        }
+
+        const card = document.createElement('div');
+        card.className =
+          "job-card rounded-lg overflow-hidden cursor-pointer bg-white shadow-sm border border-slate-100";
+        card.onclick = () => viewDetail(p.id);
+
+        card.innerHTML = `
+          <!-- 🔥 รูป 3 ช่อง -->
+          <div class="grid grid-cols-3 gap-[2px] aspect-[4/3] bg-slate-100 overflow-hidden">
+            ${imgs.map(url => `
+              <img
+                src="${url}"
+                class="w-full h-full object-cover"
+                loading="lazy"
+                onerror="this.src='https://placehold.co/400x300/f8fafc/cbd5e1?text=BuildPro'"
+              >
+            `).join('')}
+          </div>
+
+          <!-- ข้อมูล -->
+          <div class="p-3">
+            <h3 class="font-bold text-slate-800 text-xs leading-snug line-clamp-2 h-8 mb-2">
+              ${p.title}
+            </h3>
+
+            <div class="flex justify-between items-center border-t border-slate-50 pt-2">
+              <span class="text-[9px] text-slate-400 font-bold">ราคาเริ่มต้น</span>
+              <span class="text-slate-900 font-bold text-xs">
+                ฿${Number(p.price).toLocaleString()}
+              </span>
+            </div>
+          </div>
+        `;
+
+        dom.board.appendChild(card);
+    });
+
     updatePagination();
 }
 
@@ -666,11 +693,22 @@ function openSlider(i) {
     sliderIndex = i;
     dom.sliderImg.src = sliderImages[i];
     dom.sliderCount.textContent = `${i + 1}/${sliderImages.length}`;
+    
+    // 🔥 แก้ไข: ปิด Dialog รายละเอียดก่อน เพื่อให้ Slider แสดงผลได้เต็มที่ (แก้ปัญหา Z-Index/Backdrop)
+    dom.viewDlg.close();
+    
     dom.slider.classList.remove('hidden'); dom.slider.classList.add('flex');
     setScrollLock(true);
 }
 
-function closeImageSlider() { dom.slider.classList.add('hidden'); dom.slider.classList.remove('flex'); setScrollLock(false); }
+function closeImageSlider() { 
+    dom.slider.classList.add('hidden'); 
+    dom.slider.classList.remove('flex'); 
+    
+    // 🔥 แก้ไข: เปิด Dialog รายละเอียดกลับมาเมื่อปิดรูป (Swap กลับ)
+    dom.viewDlg.showModal();
+    // ไม่ต้อง setScrollLock(false) เพราะ Dialog ยังเปิดอยู่
+}
 
 function changeSlide(n) {
     sliderIndex = (sliderIndex + n + sliderImages.length) % sliderImages.length;
