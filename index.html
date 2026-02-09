@@ -31,6 +31,7 @@
         -webkit-tap-highlight-color: transparent; 
         overflow-x: hidden;
         letter-spacing: -0.01em;
+        padding-bottom: env(safe-area-inset-bottom); /* รองรับ iPhone รุ่นใหม่ */
     }
 
     body.no-scroll { overflow: hidden; }
@@ -119,11 +120,16 @@
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     .mobile-touch-target { min-height: 44px; min-width: 44px; }
+    
+    /* Bottom Nav Safe Area */
+    .pb-safe-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
 </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col bg-slate-50">
 
-<!-- Navigation -->
+<!-- Navigation (Top) -->
 <nav class="nav-solid sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
       <!-- Logo Area -->
@@ -150,8 +156,8 @@
              </div>
          </div>
 
-         <!-- Register Button -->
-         <button onclick="openNewPostModal()" class="bg-yellow-500 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-[0_3px_0_rgb(161,98,7)] active:shadow-none active:translate-y-[3px] transition-all flex items-center gap-2 border border-yellow-600">
+         <!-- Register Button (Desktop Only) -->
+         <button onclick="openNewPostModal()" class="hidden lg:flex bg-yellow-500 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-[0_3px_0_rgb(161,98,7)] active:shadow-none active:translate-y-[3px] transition-all items-center gap-2 border border-yellow-600">
             <i class="fa-solid fa-plus text-xs drop-shadow-sm"></i> 
             <span>ลงประกาศ</span>
          </button>
@@ -190,7 +196,7 @@
     </div>
 </header>
 
-<main class="flex-grow max-w-7xl mx-auto px-4 py-6 w-full relative z-20">
+<main class="flex-grow max-w-7xl mx-auto px-4 py-6 w-full relative z-20 pb-24">
     <!-- Loader (Shows only if no cache) -->
     <div id="loading" class="flex flex-col items-center justify-center py-12 bg-white rounded-xl border border-slate-100 shadow-sm hidden">
         <div class="w-10 h-10 border-4 border-slate-200 border-t-yellow-500 rounded-full animate-spin mb-3"></div>
@@ -208,11 +214,28 @@
     </div>
 </main>
 
-<footer class="bg-slate-950 text-slate-500 py-8 px-4 border-t border-slate-900 text-center">
+<footer class="bg-slate-950 text-slate-500 py-8 px-4 border-t border-slate-900 text-center pb-24 lg:pb-8">
     <i class="fa-solid fa-certificate text-yellow-600 text-2xl mb-2 icon-3d"></i>
     <p class="text-[10px] uppercase tracking-widest text-slate-600 mb-4">Verified Standard</p>
     <p class="text-[10px]">© 2024 BuildPro Connect.</p>
 </footer>
+
+<!-- Bottom Navigation (App Style) -->
+<div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-50 lg:hidden flex justify-around items-end h-[60px] pb-safe-bottom">
+    <!-- Home Button -->
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'}); refreshApp();" class="flex flex-col items-center justify-center w-1/2 h-full gap-1 text-slate-400 hover:text-slate-900 active:text-slate-900 transition-colors">
+        <i class="fa-solid fa-house text-lg mb-0.5"></i>
+        <span class="text-[10px] font-bold">หน้าแรก</span>
+    </button>
+    
+    <!-- Post Button -->
+    <button onclick="openNewPostModal()" class="flex flex-col items-center justify-center w-1/2 h-full gap-1 text-slate-400 hover:text-yellow-600 active:text-yellow-700 transition-colors">
+        <div class="relative">
+            <i class="fa-solid fa-plus-circle text-2xl text-yellow-500 shadow-sm bg-white rounded-full"></i>
+        </div>
+        <span class="text-[10px] font-bold text-slate-900">ลงประกาศ</span>
+    </button>
+</div>
 
 <!-- View Detail Dialog -->
 <dialog id="viewDlg" class="w-full max-w-4xl p-0 rounded-xl overflow-hidden bg-white shadow-2xl">
